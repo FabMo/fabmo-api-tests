@@ -33,7 +33,7 @@ async def onAuthFail(message):
 
 @sio.on('connect_error')
 async def onConnectError():
-    print(f"Websocket disconnected (connection error\n")
+    print(f"Websocket disconnected (connection error)\n")
 
 @sio.on('user_change')
 async def onUserChange(user):
