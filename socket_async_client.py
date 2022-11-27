@@ -1,5 +1,6 @@
 import asyncio
 import socketio
+from config import config
 
 sio = socketio.AsyncClient()
 
@@ -49,7 +50,7 @@ async def disconnect():
     print('disconnected from server\n')
 
 async def main():
-    await sio.connect('http://192.168.87.61')
+    await sio.connect(f'{config.API_URL}')
     await sio.wait()
 
 if __name__ == '__main__':
