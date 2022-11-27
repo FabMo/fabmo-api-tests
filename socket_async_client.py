@@ -4,10 +4,6 @@ from config import config
 
 sio = socketio.AsyncClient()
 
-@sio.event
-async def connect():
-    print('connection established\n')
-
 @sio.on('status')
 async def onStatus(status):
     print(f"status: {status}\n")
@@ -15,6 +11,14 @@ async def onStatus(status):
 @sio.on('change')
 async def onChange(change):
     print(f"change: {change}\n")
+
+@sio.on('job_start')
+async def onStart(start_info):
+    print(f"Job start: {start_info}\n")
+
+@sio.on('job_end')
+async def onEnd(end_info):
+    print(f"Job end: {end_info}\n")
 
 @sio.on('connect')
 async def onConnect():
@@ -39,11 +43,6 @@ async def onConnectError():
 @sio.on('user_change')
 async def onUserChange(user):
     print(f"user change: {user}\n")
-
-@sio.on('*')
-async def catch_all(event, data):
-    print(f"Event: {event}")
-    print(f"Data: {data}\n")
 
 @sio.event
 async def disconnect():
