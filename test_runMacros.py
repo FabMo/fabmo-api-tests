@@ -1,6 +1,5 @@
 import requests
 from config import config
-import time
 
 macro_number = 0 
 
