@@ -24,25 +24,9 @@ async def onEnd(end_info):
 async def onConnect():
     print("Websocket connected\n")
 
-@sio.on('message')
-async def onMessage(message):
-    print(f"message: {message}\n")
-
 @sio.on('disconnect')
 async def onDisconnect():
     print("Websocket disconnected\n")
-
-@sio.on('authentication_failed')
-async def onAuthFail(message):
-    print(f"authentication failed message: {message}\n")
-
-@sio.on('connect_error')
-async def onConnectError():
-    print(f"Websocket disconnected (connection error)\n")
-
-@sio.on('user_change')
-async def onUserChange(user):
-    print(f"user change: {user}\n")
 
 @sio.event
 async def disconnect():
