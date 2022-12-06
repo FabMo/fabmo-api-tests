@@ -1,13 +1,25 @@
 import asyncio
 import socketio
 from config import config
+from msg_fabmo_status import FabmoStatus
+
+eventsReceived = {
+    "change" : "notYet",
+    "status" : "notYet"
+}
 
 sio = socketio.AsyncClient()
 
+# implemented from server to client
 @sio.on('status')
 async def onStatus(status):
-    print(f"status: {status}\n")
+    msg = FabmoStatus(status)
+    state = msg.get("state")
+    eventsReceived["status"] = state
+    print(f"state: {state}\n")
+    print(f"events: {eventsReceived}\n")
 
+# implemented from server to client
 @sio.on('change')
 async def onChange(change):
     print(f"change: {change}\n")
