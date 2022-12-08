@@ -1,11 +1,19 @@
 import asyncio
+import time
 import socketio
 from config import config
 from msg_fabmo_status import FabmoStatus
 
 class MessageMonitor:
     def __init__(self):
-        self.run();        
+        self.initialized = 1
+
+    #private data
+    eventsReceived = {
+        "change" : "notYet",
+        "state" : "notYet"
+    }
+
 
     #######################################################
     # Public API for use by tests
@@ -36,18 +44,23 @@ class MessageMonitor:
     #    prior test cases.
     #######################################################
     #public method
-    async def wait_for_state(self, state2wait4, timeout):
-        print("hello")
-
+    def wait_for_state(self, state2wait4, timeout):
+#        print(f"{state2wait4}, {timeout}");
+        end_time = time.time() + timeout
+        while time.time() < end_time:
+            if state2wait4 == MessageMonitor.eventsReceived["state"]:
+                return True
+            time.sleep(1)
+        return False
 
     #public method
-    #async def wait_for_change(self, change2wait4):
-
-
+#    def wait_for_change(self, change2wait4, timeout):
+##        print(f"{change2wait4}, {timeout}")
+        
     #public method
     def clear_all_state(self):
-        eventsReceived["state"] = "notYet"
-        eventsReceived["change"] = "state"
+        MessageMonitor.eventsReceived["state"] = "notYet"
+        MessageMonitor.eventsReceived["change"] = "state"
 
     # public method
     def run(self):
@@ -55,32 +68,28 @@ class MessageMonitor:
 
 #################################################################
 # everything from here on down is meant to be private
+# and is a mess - need to figure out how to hide this in the 
+# class above or make a module that can be a memboer of the class above
+#
 # Internal socketio server 
 #  to make API work:
 
 sio = socketio.AsyncClient()
  
-#private data
-eventsReceived = {
-    "change" : "notYet",
-    "state" : "notYet"
-}
-
 
 # implemented from server to client
 @sio.on('status')
 async def onStatus(status):
     msg = FabmoStatus(status)
     state = msg.get("state")
-    eventsReceived["state"] = state
-#    print(f"state: {state}\n")
-    print(f"events: {eventsReceived}\n")
+    MessageMonitor.eventsReceived["state"] = state
+#   print(f"state: {state}\n")
 
 # implemented from server to client
 @sio.on('change')
 async def onChange(change):
-    eventsReceived["change"] = change
-    print(f"change: {change}\n")
+    MessageMonitor.eventsReceived["change"] = change
+#    print(f"MessageMonitor.change: {change}\n")
 
 @sio.on('job_start')
 async def onStart(start_info):
