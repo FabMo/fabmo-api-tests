@@ -1,8 +1,11 @@
 import asyncio
 import time
+import threading
 import socketio
 from config import config
 from msg_fabmo_status import FabmoStatus
+
+lock = threading.Lock()
 
 class MessageMonitor:
     def __init__(self):
@@ -13,6 +16,32 @@ class MessageMonitor:
         "change" : "notYet",
         "state" : "notYet"
     }
+    
+    @staticmethod
+    def setState(state):
+        lock.acquire()
+        MessageMonitor.eventsReceived["state"] = state
+        lock.release()
+
+    @staticmethod
+    def getState():
+        lock.acquire()
+        rc = MessageMonitor.eventsReceived["state"] 
+        lock.release()
+        return rc
+
+    @staticmethod
+    def setChange(change):
+        lock.acquire()
+        MessageMonitor.eventsReceived["change"] = change
+        lock.release()
+
+    @staticmethod
+    def getChange():
+        lock.acquire()
+        rc = MessageMonitor.eventsReceived["change"] 
+        lock.release()
+        return rc
 
 
     #######################################################
@@ -48,7 +77,8 @@ class MessageMonitor:
 #        print(f"{state2wait4}, {timeout}");
         end_time = time.time() + timeout
         while time.time() < end_time:
-            if state2wait4 == MessageMonitor.eventsReceived["state"]:
+            currentState = MessageMonitor.getState()
+            if state2wait4 == currentState:
                 return True
             time.sleep(1)
         return False
@@ -59,8 +89,8 @@ class MessageMonitor:
         
     #public method
     def clear_all_state(self):
-        MessageMonitor.eventsReceived["state"] = "notYet"
-        MessageMonitor.eventsReceived["change"] = "state"
+        MessageMonitor.setState("notYet")
+        MessageMonitor.setChange("state")
 
     # public method
     def run(self):
@@ -82,13 +112,12 @@ sio = socketio.AsyncClient()
 async def onStatus(status):
     msg = FabmoStatus(status)
     state = msg.get("state")
-    MessageMonitor.eventsReceived["state"] = state
-#   print(f"state: {state}\n")
+    MessageMonitor.setState(state)
 
 # implemented from server to client
 @sio.on('change')
 async def onChange(change):
-    MessageMonitor.eventsReceived["change"] = change
+    MessageMonitor.setChange(change)
 #    print(f"MessageMonitor.change: {change}\n")
 
 @sio.on('job_start')
