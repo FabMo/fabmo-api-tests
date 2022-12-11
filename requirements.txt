@@ -2,3 +2,4 @@ pytest
 python-socketio
 python-dotenv
 aiohttp
+requests
