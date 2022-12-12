@@ -15,24 +15,6 @@ def submitJob(results):
         results["msg"] = "bad http code"
         return
 
-    # print("waiting for running")
-    # success = mm.wait_for_state("running", 10)
-    # if success:
-    #     print("now running")
-    # else:
-    #     results["code"] = False
-    #     results["msg"] = "timed out while waiting for running"
-    #     return 
-
-    # print("waiting for idle")
-    # success = mm.wait_for_state("idle", 600) 
-    # if success:
-    #     print("now idle")
-    # else:
-    #     results["code"] = False
-    #     results["msg"] = "timed out while waiting for idle"
-    #     return 
-
     results["code"] = True
     results["msg"] = "success"
     return 
