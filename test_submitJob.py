@@ -7,7 +7,8 @@ from message_monitor import MessageMonitor
 global mm 
 mm = MessageMonitor()
 
-# Utility funcitons
+# Utility functions
+# TODO, job id is hard coded, needs to be flexible
 def submitJob(results):
     r = requests.post(f'{config.API_URL}/job/3/')
     if r.status_code != 200:
@@ -20,7 +21,7 @@ def submitJob(results):
     return 
 
 def thread_for_mm(args):
-    mm.run() 
+    mm.run()
 
 # test function
 def test_submitJob():
@@ -40,7 +41,7 @@ def test_submitJob():
     #print(results)
     assert(results["code"] == True)
  
-if __name__ == "__main__": 
-    print(config.API_URL) 
+if __name__ == "__main__":
+    print(config.API_URL)
     test_submitJob()
 
