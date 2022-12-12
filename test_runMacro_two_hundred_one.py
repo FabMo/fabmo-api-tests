@@ -7,52 +7,66 @@ from message_monitor import MessageMonitor
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
+macro_number = 0
 
-# Utility funcitons
-def runNextJob(results):
-    r = requests.post(f'{config.API_URL}/jobs/queue/run')
+def runMacro_two_hundred_one(results):
+    macro_number = 201 
+    r = requests.post(f'{config.API_URL}/macros/{macro_number}/run')
     if r.status_code != 200:
         results["code"] = False
         results["msg"] = "bad http code"
         return
 
-    print("waiting for running")
-    success = mm.wait_for_state("running", 10)
+    ## Job is not 'running' long enough for test to recognize the state
+    # # wait for job to start
+    # print("waiting for running")
+    # success = mm.wait_for_state("running", 1)
+    # if success:
+    #     print("now running macro 201")
+    # else:
+    #     results["code"] = False
+    #     results["msg"] = "timed out while waiting for running"
+    #     return
+
+    #wait for pause at end of file
+    print("waiting for pause")
+    success = mm.wait_for_state("paused", 3) 
     if success:
-        print("now running")
+        print("now paused")
     else:
         results["code"] = False
-        results["msg"] = "timed out while waiting for running"
-        return 
-
+        results["msg"] = "timed out while waiting for idle"
+        return
+    
+    # wait for job to end
     print("waiting for idle")
-    success = mm.wait_for_state("idle", 600) 
+    success = mm.wait_for_state("idle", 10) 
     if success:
         print("now idle")
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for idle"
-        return 
+        return
 
     results["code"] = True
     results["msg"] = "success"
     return 
 
 def thread_for_mm(args):
-    mm.run() 
+    mm.run()
 
 # test function
-def test_runNextJob():
+def test_runMacro_two_hundred_one():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
     results = {"code":False, "msg":""}
-    testThread = threading.Thread(target=runNextJob, args=(results,))
+    testThread = threading.Thread(target=runMacro_two_hundred_one, args=(results,))
 
     # test sequence 
     messageMonitorThread.start() 
     time.sleep(1) # time for the MessageMonitor to get up and running
     testThread.start()
-    testThread.join() #waiting for the test to return
+    testThread.join() #waitig for the test to return
 
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)
@@ -61,6 +75,4 @@ def test_runNextJob():
  
 if __name__ == "__main__": 
     print(config.API_URL) 
-    test_runNextJob()
-   
-    
+    test_runMacro_two_hundred_one()

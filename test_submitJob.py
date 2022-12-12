@@ -6,6 +6,7 @@ from message_monitor import MessageMonitor
 
 global mm 
 mm = MessageMonitor()
+mm.clear_all_state()
 
 # Utility functions
 # TODO, job id is hard coded, needs to be flexible
