@@ -38,11 +38,12 @@ def runMacro_two_hundred_one(results):
         results["msg"] = "timed out while waiting for idle"
         return
     
-    # wait for job to end
-    print("waiting for idle")
+    #Resume from pause at end of file, file will end immediately after
+    print("waiting for idle, end of macro 201")
+    r = requests.post(f'{config.API_URL}/resume')
     success = mm.wait_for_state("idle", 10) 
     if success:
-        print("now idle")
+        print("macro 201 completed successfully")
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for idle"
