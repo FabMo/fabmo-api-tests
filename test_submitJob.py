@@ -11,7 +11,10 @@ mm.clear_all_state()
 # Utility functions
 # TODO, job id is hard coded, needs to be flexible
 def submitJob(results):
-    r = requests.post(f'{config.API_URL}/job/3/')
+
+    payload = {"meta": {"metadata"}, "files":[{"file": "Mx, 10", "filename": "test", "name": "test", "description": "test"}]}
+    r = requests.post(f'{config.API_URL}/job/', data=payload)
+    print(r.text)
     if r.status_code != 200:
         results["code"] = False
         results["msg"] = "bad http code"
@@ -25,6 +28,7 @@ def thread_for_mm(args):
     mm.run()
 
 # test function
+
 def test_submitJob():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
