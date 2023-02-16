@@ -14,7 +14,8 @@ class MessageMonitor:
     #private data
     eventsReceived = {
         "change" : "notYet",
-        "state" : "notYet"
+        "state" : "notYet",
+        "out1" : "notYet"
     }
     
     @staticmethod
@@ -40,6 +41,19 @@ class MessageMonitor:
     def getChange():
         lock.acquire()
         rc = MessageMonitor.eventsReceived["change"] 
+        lock.release()
+        return rc
+
+    @staticmethod
+    def setOut1(output):
+        lock.acquire()
+        MessageMonitor.eventsReceived["out1"] = output
+        lock.release()
+
+    @staticmethod
+    def getOut1():
+        lock.acquire()
+        rc = MessageMonitor.eventsReceived["out1"]
         lock.release()
         return rc
 
@@ -74,11 +88,21 @@ class MessageMonitor:
     #######################################################
     #public method
     def wait_for_state(self, state2wait4, timeout):
-#        print(f"{state2wait4}, {timeout}");
+#       print(f"{state2wait4}, {timeout}");
         end_time = time.time() + timeout
         while time.time() < end_time:
             currentState = MessageMonitor.getState()
             if state2wait4 == currentState:
+                return True
+            time.sleep(1)
+        return False
+
+    def wait_for_output(self, output2wait4, timeout):
+#       print(f"{state2wait4}, {timeout}");
+        end_time = time.time() + timeout
+        while time.time() < end_time:
+            output = MessageMonitor.getOut1()
+            if output2wait4 == output:
                 return True
             time.sleep(1)
         return False
@@ -91,6 +115,7 @@ class MessageMonitor:
     def clear_all_state(self):
         MessageMonitor.setState("notYet")
         MessageMonitor.setChange("state")
+        MessageMonitor.setOut1("notOutput")
 
     # public method
     def run(self):
@@ -112,7 +137,9 @@ sio = socketio.AsyncClient()
 async def onStatus(status):
     msg = FabmoStatus(status)
     state = msg.get("state")
+    out1 = msg.get("out1")
     MessageMonitor.setState(state)
+    MessageMonitor.setOut1(out1)
 
 # implemented from server to client
 @sio.on('change')
