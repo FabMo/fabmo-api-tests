@@ -39,7 +39,7 @@ def test_submitJob():
     messageMonitorThread.start() 
     time.sleep(1) # time for the MessageMonitor to get up and running
     testThread.start()
-    testThread.join() #waitig for the test to return
+    testThread.join() #waiting for the test to return
 
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)

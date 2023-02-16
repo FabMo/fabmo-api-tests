@@ -32,10 +32,15 @@ The more_tests directory contains tests that will hit an api endpoint
 and produce a response, but are not necessarily useful in their
 current state. i.e. They do not validate that anything actually happened.
 
-The jobs directory holds test jobs.
+The jobs directory holds test jobs. None are implemented yet.
+
+test_runMacro_five.py is complete. Starts job, checks if spindle is running,
+checks if state returns to idle.
 
 test_runMacro_two_hundred_one.py is complete. The pauses are a bit longer
 than they need to be, but sometimes this file takes a little bit longer to run.
+
+test_runMacro_two_hundred_eleven.py is complete. Very similar to 201, just longer.
 
 test_runNextJob.py Works but only for a file that is already queued up
 that is less than 600 seconds long. The file cannot contain a pause.
