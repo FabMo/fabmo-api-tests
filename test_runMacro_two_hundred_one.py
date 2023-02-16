@@ -17,23 +17,20 @@ def runMacro_two_hundred_one(results):
         results["msg"] = "bad http code"
         return
 
-    # Job is not 'running' long enough 
-    # for running state to be recognized
-
-    #wait for pause at end of file
-    print("waiting for pause")
-    success = mm.wait_for_state("paused", 10) 
+    # Wait for running state
+    print("waiting for running")
+    time.sleep(0.5)
+    success = mm.wait_for_state("running", 0.5)
     if success:
-        print("now paused")
+        print("macro 201 is running")
     else:
         results["code"] = False
-        results["msg"] = "timed out while waiting for idle"
+        results["msg"] = "timed out while waiting for running"
         return
-    
-    #Resume from pause at end of file, file should end immediately after
+
+    # Wait for idle at end of file, signaling that the file completed
     print("waiting for idle, end of macro 201")
     time.sleep(5)
-    r = requests.post(f'{config.API_URL}/resume')
     success = mm.wait_for_state("idle", 10) 
     if success:
         print("macro 201 completed successfully")
