@@ -67,7 +67,8 @@ def submitJob(results):
     name = "test_name"
     description = "test_description"
     key = ''
-    codes = "mx, 10\nmx, 0"
+    with open('jobs/sample_shopbot_logo.sbp', 'r') as file:
+        codes = file.read()
 
     metadata = {
         'files' : [
