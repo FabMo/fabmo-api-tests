@@ -3,62 +3,12 @@ import time
 import threading
 from config import config
 from message_monitor import MessageMonitor
+from submit_job import SubmitJob
 import io, codecs, mimetypes, sys, uuid
 
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
-
-# Legacy class that is necessary for submitting a new
-# job, I would love to see this class go away.
-# The requests library probably has the means to achieve this
-class MultipartFormdataEncoder(object):
-    def __init__(self):
-        self.boundary = uuid.uuid4().hex
-        self.content_type = 'multipart/form-data; boundary={}'.format(self.boundary)
-
-    @classmethod
-    def u(cls, s):
-        if sys.hexversion < 0x03000000 and isinstance(s, str):
-            s = s.decode('utf-8')
-        if sys.hexversion >= 0x03000000 and isinstance(s, bytes):
-            s = s.decode('utf-8')
-        return s
-
-    def iter(self, fields, files):
-        """
-        fields is a sequence of (name, value) elements for regular form fields.
-        files is a sequence of (name, filename, file-type) elements for data to be uploaded as files
-        Yield body's chunk as bytes
-        """
-        encoder = codecs.getencoder('utf-8')
-        for (key, value) in fields:
-            key = self.u(key)
-            yield encoder('--{}\r\n'.format(self.boundary))
-            yield encoder(self.u('Content-Disposition: form-data; name="{}"\r\n').format(key))
-            yield encoder('\r\n')
-            if isinstance(value, int) or isinstance(value, float):
-                value = str(value)
-            yield encoder(self.u(value))
-            yield encoder('\r\n')
-        for (key, filename, fd) in files:
-            key = self.u(key)
-            filename = self.u(filename)
-            yield encoder('--{}\r\n'.format(self.boundary))
-            yield encoder(self.u('Content-Disposition: form-data; name="{}"; filename="{}"\r\n').format(key, filename))
-            yield encoder('Content-Type: {}\r\n'.format(mimetypes.guess_type(filename)[0] or 'application/octet-stream'))
-            yield encoder('\r\n')
-            with fd:
-                buff = fd.read()
-                yield (buff, len(buff))
-            yield encoder('\r\n')
-        yield encoder('--{}--\r\n'.format(self.boundary))
-
-    def encode(self, fields, files):
-        body = io.BytesIO()
-        for chunk, chunk_len in self.iter(fields, files):
-            body.write(chunk)
-        return self.content_type, body.getvalue()
 
 # Utility functions
 def submitJob(results):
@@ -83,7 +33,6 @@ def submitJob(results):
 
     # First request
     r = requests.post(f'{config.API_URL}/job', json=metadata)
-    print(r.text)
     if r.status_code != 200:
         results["code"] = False
         results["msg"] = "bad http code"
@@ -135,7 +84,6 @@ def test_submitJob():
     assert(results["code"] == True)
  
 if __name__ == "__main__":
-    print("NEW SCRIPT")
     print(config.API_URL)
     test_submitJob()
 
