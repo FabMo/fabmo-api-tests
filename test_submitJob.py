@@ -77,7 +77,7 @@ def submitJob(results):
     }
 
     # First request
-    r = requests.post(f'{config.API_URL}/job', data=metadata)
+    r = requests.post(f'{config.API_URL}/job', json=metadata)
     print(r.text)
     if r.status_code != 200:
         results["code"] = False
@@ -91,16 +91,19 @@ def submitJob(results):
             for k in json_data['data']['key']:
                 key += k
     print(key)
-
+    print(type(key))
     codes = "mx, 10\nmx, 0"
     content_type, body = MultipartFormdataEncoder().encode([('key', key), ('index',0)], [('file', filename, io.BytesIO(codes.encode('utf-8')))])
     headers = {"Content-type": content_type, "Accept":"text/plain"}
     print("body")
     print(body)
+    print(type(body))
     print("headers")
     print(headers)
+    print(type(headers))
     # Second request
     r = requests.post(f'{config.API_URL}/job', data=body, headers=headers)
+    print("r.text")
     print(r.text)
     if r.status_code != 200:
         results["code"] = False

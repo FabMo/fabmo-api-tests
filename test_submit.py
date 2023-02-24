@@ -80,20 +80,26 @@ def submitJob():
     # Second request
     codes = "mx, 10\nmx, 0"
     print(response_data['key'])
+    print(type(response_data['key']))
     content_type, body = MultipartFormdataEncoder().encode([('key', response_data['key']), ('index',0)], [('file', filename, io.BytesIO(codes.encode('utf-8')))])
     headers = {"Content-type":content_type, "Accept":"text/plain"}
     conn.request("POST", "/job", body, headers)
     print("body")
     print(body)
+    print(type(body))
     print("headers")
     print(headers)
+    print(type(headers))
     response = conn.getresponse()
     response_text = response.read().decode('utf-8')
     response_data = json.loads(response_text)
+    print("response_text")
     print(response_text)
+    print("response_data")
+    print(response_data)
     conn.close()
 
 if __name__ == "__main__":
-    print("STURMER")
+    print("OLD SCRIPT")
     submitJob()
 
