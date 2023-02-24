@@ -4,11 +4,14 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 import io, codecs, mimetypes, sys, uuid
-s=requests.Session()
+
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
 
+# Legacy class that is necessary for submitting a new
+# job, I would love to see this class go away.
+# The requests library probably has the means to achieve this
 class MultipartFormdataEncoder(object):
     def __init__(self):
         self.boundary = uuid.uuid4().hex
