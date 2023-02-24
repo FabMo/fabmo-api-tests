@@ -8,6 +8,9 @@ global mm
 mm = MessageMonitor()
 mm.clear_all_state()
 
+# Runs the job that is currently in the job manager queue
+# Currently, the file must not contain an opensbp pause, and be
+# shorter than 600 seconds
 # Utility funcitons
 def runNextJob(results):
     r = requests.post(f'{config.API_URL}/jobs/queue/run')

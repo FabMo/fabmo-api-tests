@@ -64,6 +64,7 @@ def submitJob(results):
     name = "test_name"
     description = "test_description"
     key = ''
+    codes = "mx, 10\nmx, 0"
 
     metadata = {
         'files' : [
@@ -84,27 +85,19 @@ def submitJob(results):
         results["msg"] = "bad http code"
         return
 
-    # Extract key from response json
+    # Setup for second request
+    # Extract key from first response json
     json_data = r.json()
     if json_data and 'data' in json_data:
         if 'key' in json_data['data']:
             for k in json_data['data']['key']:
                 key += k
-    print(key)
-    print(type(key))
-    codes = "mx, 10\nmx, 0"
+
     content_type, body = MultipartFormdataEncoder().encode([('key', key), ('index',0)], [('file', filename, io.BytesIO(codes.encode('utf-8')))])
     headers = {"Content-type": content_type, "Accept":"text/plain"}
-    print("body")
-    print(body)
-    print(type(body))
-    print("headers")
-    print(headers)
-    print(type(headers))
+
     # Second request
     r = requests.post(f'{config.API_URL}/job', data=body, headers=headers)
-    print("r.text")
-    print(r.text)
     if r.status_code != 200:
         results["code"] = False
         results["msg"] = "bad http code"
