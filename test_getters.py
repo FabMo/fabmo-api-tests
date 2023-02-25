@@ -4,6 +4,7 @@ from config import config
 def test_getConfig():
     r = requests.get(f'{config.API_URL}/config')
     assert r.status_code == 200
+    return r.json()
 
 def test_getJob():
     r = requests.get(f'{config.API_URL}/job')

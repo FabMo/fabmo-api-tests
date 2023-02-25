@@ -3,7 +3,7 @@ import time
 from config import config
 import io, codecs, mimetypes, sys, uuid
 
-# MultipartFormdataEncoder is aLegacy class that is necessary for 
+# MultipartFormdataEncoder is a legacy class that is necessary for 
 # submitting a new job to fabmo, I would love to see this class go away.
 # The requests library probably has the means to achieve this
 class MultipartFormdataEncoder(object):
@@ -54,16 +54,19 @@ class MultipartFormdataEncoder(object):
             body.write(chunk)
         return self.content_type, body.getvalue()
 
-# Utility functions
+
 class SubmitJob:
     def __init__(self):
         self.initialized = 1
     
     #public method
+    #Takes three optional arguments
+    #The most important is the filename, which must exist in the local jobs directory
+    #If no arguments are provided, the sample_shopbot_logo file will be submitted
     def submit(self, filename = "sample_shopbot_logo.sbp", name = "test_name", description="test_description"):
         # Setup for requests
         key = ''
-        with open('jobs/sample_shopbot_logo.sbp', 'r') as file:
+        with open('jobs/' + filename, 'r') as file:
             codes = file.read()
 
         metadata = {
@@ -79,10 +82,6 @@ class SubmitJob:
 
         # First request
         r = requests.post(f'{config.API_URL}/job', json=metadata)
-        if r.status_code != 200:
-            results["code"] = False
-            results["msg"] = "bad http code"
-            return
 
         # Setup for second request
         # Extract key from first response json
@@ -97,10 +96,6 @@ class SubmitJob:
 
         # Second request
         r = requests.post(f'{config.API_URL}/job', data=body, headers=headers)
-        if r.status_code != 200:
-            results["code"] = False
-            results["msg"] = "bad http code"
-            return
  
 if __name__ == "__main__":
     submit_job = SubmitJob()

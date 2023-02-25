@@ -10,51 +10,13 @@ global mm
 mm = MessageMonitor()
 mm.clear_all_state()
 
-# Utility functions
 def submitJob(results):
-    # Setup for requests
-    filename = "job.sbp"
+    submit_job = SubmitJob()
+    filename = "test.sbp"
     name = "test_name"
     description = "test_description"
-    key = ''
-    with open('jobs/sample_shopbot_logo.sbp', 'r') as file:
-        codes = file.read()
 
-    metadata = {
-        'files' : [
-            {
-                'filename' : filename,
-                'name' : name,
-                'description' : description
-            }
-        ],
-        'meta' : {}
-    }
-
-    # First request
-    r = requests.post(f'{config.API_URL}/job', json=metadata)
-    if r.status_code != 200:
-        results["code"] = False
-        results["msg"] = "bad http code"
-        return
-
-    # Setup for second request
-    # Extract key from first response json
-    json_data = r.json()
-    if json_data and 'data' in json_data:
-        if 'key' in json_data['data']:
-            for k in json_data['data']['key']:
-                key += k
-
-    content_type, body = MultipartFormdataEncoder().encode([('key', key), ('index',0)], [('file', filename, io.BytesIO(codes.encode('utf-8')))])
-    headers = {"Content-type": content_type, "Accept":"text/plain"}
-
-    # Second request
-    r = requests.post(f'{config.API_URL}/job', data=body, headers=headers)
-    if r.status_code != 200:
-        results["code"] = False
-        results["msg"] = "bad http code"
-        return
+    submit_job.submit(filename, name, description)
 
     # Did test pass?
     results["code"] = True
