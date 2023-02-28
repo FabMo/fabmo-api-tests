@@ -99,5 +99,4 @@ class SubmitJob:
  
 if __name__ == "__main__":
     submit_job = SubmitJob()
-    submit_job.submit()
 

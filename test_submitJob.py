@@ -1,11 +1,11 @@
-import requests
 import time
 import threading
 from config import config
 from message_monitor import MessageMonitor
 from submit_job import SubmitJob
-import io, codecs, mimetypes, sys, uuid
+from getters import Getters
 
+get = Getters()
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
@@ -15,7 +15,7 @@ def submitJob(results):
     filename = "test.sbp"
     name = "test_name"
     description = "test_description"
-
+    print(get.getJobQueue())
     submit_job.submit(filename, name, description)
 
     # Did test pass?
