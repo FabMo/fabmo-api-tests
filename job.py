@@ -96,6 +96,9 @@ class Job:
 
         # Second request
         r = requests.post(f'{config.API_URL}/job', data=body, headers=headers)
+
+    def clear_job_queue(self):
+        r = requests.delete(f'{config.API_URL}/jobs/queue')
  
 if __name__ == "__main__":
     job = Job()

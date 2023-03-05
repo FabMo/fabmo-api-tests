@@ -12,21 +12,37 @@ mm.clear_all_state()
 
 def submitJob(results):
     job = Job()
-    jobs_in_queue = False
     filename = "test.sbp"
     name = "testing submitJob"
     description = "test_description"
+
+    # Clear the job queue, test that it is cleared successfully
+    job.clear_job_queue()
     queue = get.getJobQueue()
-    print(queue)
-    ##Can check if the job queue is empty
     if queue and 'data' in queue:
             if 'jobs' in queue['data']:
                 if 'pending' in queue['data']['jobs']:
                     if queue['data']['jobs']['pending'] == []:
-                        print("Empty")
+                        print("Job queue is clear")
                     else:
-                        print("Not empty")
+                        results["code"] = False
+                        results["msg"] = "Job queue is NOT clear"
+                        return
+
+    # Submit the job
     job.submit(filename, name, description)
+
+    # Check that the submitted job is in the queue
+    queue = get.getJobQueue()
+    if queue and 'data' in queue:
+            if 'jobs' in queue['data']:
+                if 'pending' in queue['data']['jobs']:
+                    if queue['data']['jobs']['pending'] == []:
+                        results["code"] = False
+                        results["msg"] = "Job not submmited successfully"
+                        return
+                    else:
+                        print("Job submitted successfully")
 
     # Did test pass?
     results["code"] = True
