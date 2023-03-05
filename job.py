@@ -55,7 +55,7 @@ class MultipartFormdataEncoder(object):
         return self.content_type, body.getvalue()
 
 
-class SubmitJob:
+class Job:
     def __init__(self):
         self.initialized = 1
     
@@ -98,5 +98,5 @@ class SubmitJob:
         r = requests.post(f'{config.API_URL}/job', data=body, headers=headers)
  
 if __name__ == "__main__":
-    submit_job = SubmitJob()
+    job = Job()
 

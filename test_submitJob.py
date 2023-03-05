@@ -2,21 +2,31 @@ import time
 import threading
 from config import config
 from message_monitor import MessageMonitor
-from submit_job import SubmitJob
-from getters import Getters
+from job import Job
+from get_requests import Get_Requests
 
-get = Getters()
+get = Get_Requests()
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
 
 def submitJob(results):
-    submit_job = SubmitJob()
+    job = Job()
+    jobs_in_queue = False
     filename = "test.sbp"
-    name = "test_name"
+    name = "testing submitJob"
     description = "test_description"
-    print(get.getJobQueue())
-    submit_job.submit(filename, name, description)
+    queue = get.getJobQueue()
+    print(queue)
+    ##Can check if the job queue is empty
+    if queue and 'data' in queue:
+            if 'jobs' in queue['data']:
+                if 'pending' in queue['data']['jobs']:
+                    if queue['data']['jobs']['pending'] == []:
+                        print("Empty")
+                    else:
+                        print("Not empty")
+    job.submit(filename, name, description)
 
     # Did test pass?
     results["code"] = True
