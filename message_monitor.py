@@ -138,6 +138,7 @@ class MessageMonitor:
         MessageMonitor.setState("notYet")
         MessageMonitor.setChange("notChange")
         MessageMonitor.setOut1("notOutput")
+        MessageMonitor.setMsg("notMessage")
 
     # public method
     def run(self):
