@@ -12,6 +12,9 @@ class FabmoStatus:
             if key == "job":
                 for job_key in self.dictionary[key].keys():
                     print(f"       {job_key} : {self.dictionary[key].get(job_key)}")
-            else:        
+            elif key == "info":
+                for info_key in self.dictionary[key].keys():
+                    print(f"       {info_key} : {self.dictionary[key].get(info_key)}")
+            else:
                 print(f"{key} : {self.dictionary.get(key)}")
  

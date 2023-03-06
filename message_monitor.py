@@ -136,6 +136,10 @@ sio = socketio.AsyncClient()
 @sio.on('status')
 async def onStatus(status):
     msg = FabmoStatus(status)
+    #DEBUG
+    msg.printMe()
+    print("\n\n\n\n")
+    #DEBUG
     state = msg.get("state")
     out1 = msg.get("out1")
     MessageMonitor.setState(state)
