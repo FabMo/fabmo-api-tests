@@ -112,7 +112,6 @@ class MessageMonitor:
         return False
 
     def wait_for_output(self, output2wait4, timeout):
-#       print(f"{state2wait4}, {timeout}");
         end_time = time.time() + timeout
         while time.time() < end_time:
             output = MessageMonitor.getOut1()
@@ -122,7 +121,6 @@ class MessageMonitor:
         return False
 
     def wait_for_message(self, message2wait4, timeout):
-#       print(f"{state2wait4}, {timeout}");
         end_time = time.time() + timeout
         while time.time() < end_time:
             message = MessageMonitor.getMsg()
