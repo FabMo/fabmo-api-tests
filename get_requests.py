@@ -10,16 +10,6 @@ class Get_Requests:
         assert r.status_code == 200
         return r.json()
 
-    def getJob(self, id):
-        r = requests.get(f'{config.API_URL}/job/{id}')
-        assert r.status_code == 200
-        return r.json()
-
-    def getJobQueue(self):
-        r = requests.get(f'{config.API_URL}/jobs/queue')
-        assert r.status_code == 200
-        return r.json()
-
     def getStatus(self):
         r = requests.get(f'{config.API_URL}/status/')
         assert r.status_code == 200

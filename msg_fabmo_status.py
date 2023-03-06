@@ -9,9 +9,11 @@ class FabmoStatus:
 
     def get_sub_key(self, main_key, sub_key):
         for key in self.dictionary.keys():
+            # This check is specifically for the 'info' field
+            # which is not always present in the status report
             if main_key not in self.dictionary.keys():
                 return
-        
+
         return self.dictionary[main_key][sub_key]
 
     def printMe(self):

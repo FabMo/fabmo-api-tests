@@ -3,9 +3,7 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
-from get_requests import Get_Requests
 
-get = Get_Requests()
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
@@ -18,7 +16,7 @@ def submitJob(results):
 
     # Clear the job queue, test that it is cleared successfully
     job.clear_job_queue()
-    queue = get.getJobQueue()
+    queue = job.get_job_queue()
     if queue and 'data' in queue:
             if 'jobs' in queue['data']:
                 if 'pending' in queue['data']['jobs']:
@@ -33,7 +31,7 @@ def submitJob(results):
     job.submit(filename, name, description)
 
     # Check that the submitted job is in the queue
-    queue = get.getJobQueue()
+    queue = job.get_job_queue()
     if queue and 'data' in queue:
             if 'jobs' in queue['data']:
                 if 'pending' in queue['data']['jobs']:

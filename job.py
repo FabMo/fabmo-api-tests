@@ -112,6 +112,16 @@ class Job:
     def quit_job(self):
         r = requests.post(f'{config.API_URL}/quit')
 
+    def get_job_by_id(self, id):
+        r = requests.get(f'{config.API_URL}/job/{id}')
+        assert r.status_code == 200
+        return r.json()
+
+    def get_job_queue(self):
+        r = requests.get(f'{config.API_URL}/jobs/queue')
+        assert r.status_code == 200
+        return r.json()
+
 if __name__ == "__main__":
     job = Job()
 
