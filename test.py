@@ -13,7 +13,7 @@ def thread_for_mm(args):
 
 
 def main(results):
-    print("pausing1")
+    print("pausing 1")
     r = requests.post(f'{config.API_URL}/pause')
     if r.status_code != 200:
             print("error")
@@ -30,7 +30,7 @@ def main(results):
         return 
 
     time.sleep(3) 
-    print("resuming1")
+    print("resuming 1")
     r = requests.post(f'{config.API_URL}/resume')
     if r.status_code != 200:
             results["code"] = False
@@ -38,7 +38,7 @@ def main(results):
             return
     print(r.text)
     time.sleep(2)
-    print("pausing2")
+    print("pausing 2")
     r = requests.post(f'{config.API_URL}/pause')
     if r.status_code != 200:
             results["code"] = False
@@ -46,7 +46,7 @@ def main(results):
             return
     print(r.text)
     time.sleep(2)
-    print("resuming2")
+    print("resuming 2")
     r = requests.post(f'{config.API_URL}/resume')
     if r.status_code != 200:
             results["code"] = False

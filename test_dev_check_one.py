@@ -3,15 +3,43 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
-from get_requests import Get_Requests
 
-get = Get_Requests()
-global mm 
+global mm
 mm = MessageMonitor()
 mm.clear_all_state()
+job = Job()
+
+# timeout is how long to wait for the expected state before giving up
+# interval is how long to sleep between pause and resume
+# repetitions dictates how many times a pause and resume will occur
+def pause_resume(timeout, interval, repetitions):
+    for x in range(repetitions):
+        print(f"pausing {x}")
+        job.pause_job()
+        print("waiting for paused")
+        success = mm.wait_for_state("paused", timeout)
+        if success:
+            print("now paused")
+        else:
+            results["code"] = False
+            results["msg"] = "timed out while waiting for paused"
+            return 
+        time.sleep(interval)
+    
+        print(f"resuming {x}")
+        job.resume_job()
+        print("waiting for resume")
+        success = mm.wait_for_state("running", timeout)
+        if success:
+            print("now running")
+        else:
+            results["code"] = False
+            results["msg"] = "timed out while waiting for running"
+            return
+        time.sleep(interval)
+
 
 def dev_check_one(results):
-    job = Job()
     filename = "sample_shopbot_logo.sbp"
     name = "testing dev check one"
     description = "test_description"
@@ -31,13 +59,15 @@ def dev_check_one(results):
         results["msg"] = "timed out while waiting for running"
         return 
 
+    pause_resume(10, 3, 10)
+
     print("wait for message at the end of the file, indicating completion")
     success = mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600)
     if success:
-        print("now paused")
+        print("DONE with ShopBot Logo")
     else:
         results["code"] = False
-        results["msg"] = "timed out while waiting for paused"
+        results["msg"] = "timed out while waiting for ShopBot Logo to complete"
         return 
 
     job.resume_job()

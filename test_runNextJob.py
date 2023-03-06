@@ -3,15 +3,17 @@ import time
 import threading
 from config import config
 from message_monitor import MessageMonitor
+from job import Job
 
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
 
 # Runs the job that is currently in the job manager queue
-# Currently, the file must not contain an opensbp pause, and be
-# shorter than 600 seconds
+# Currently, It is hard coded to handle a file with a pause at the end
+# Will improve later
 def runNextJob(results):
+    job = Job()
     r = requests.post(f'{config.API_URL}/jobs/queue/run')
     if r.status_code != 200:
         results["code"] = False
@@ -27,8 +29,19 @@ def runNextJob(results):
         results["msg"] = "timed out while waiting for running"
         return 
 
+    print("wait for message at the end of the file, indicating completion")
+    success = mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600)
+    if success:
+        print("DONE with ShopBot Logo")
+    else:
+        results["code"] = False
+        results["msg"] = "timed out while waiting for ShopBot Logo to complete"
+        return 
+
+    job.resume_job()
+
     print("waiting for idle")
-    success = mm.wait_for_state("idle", 600) 
+    success = mm.wait_for_state("idle", 10)
     if success:
         print("now idle")
     else:
