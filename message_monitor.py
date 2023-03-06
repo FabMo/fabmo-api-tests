@@ -15,7 +15,8 @@ class MessageMonitor:
     eventsReceived = {
         "change" : "notYet",
         "state" : "notYet",
-        "out1" : "notYet"
+        "out1" : "notYet",
+        "message" : "notYet"
     }
 
     @staticmethod
@@ -54,6 +55,19 @@ class MessageMonitor:
     def getOut1():
         lock.acquire()
         rc = MessageMonitor.eventsReceived["out1"]
+        lock.release()
+        return rc
+
+    @staticmethod
+    def setMsg(msg):
+        lock.acquire()
+        MessageMonitor.eventsReceived["message"] = msg
+        lock.release()
+
+    @staticmethod
+    def getMsg():
+        lock.acquire()
+        rc = MessageMonitor.eventsReceived["message"]
         lock.release()
         return rc
 
@@ -107,6 +121,16 @@ class MessageMonitor:
             time.sleep(1)
         return False
 
+    def wait_for_message(self, message2wait4, timeout):
+#       print(f"{state2wait4}, {timeout}");
+        end_time = time.time() + timeout
+        while time.time() < end_time:
+            message = MessageMonitor.getMsg()
+            if message2wait4 == message:
+                return True
+            time.sleep(1)
+        return False
+
     #public method
 #    def wait_for_change(self, change2wait4, timeout):
 ##        print(f"{change2wait4}, {timeout}")
@@ -137,13 +161,15 @@ sio = socketio.AsyncClient()
 async def onStatus(status):
     msg = FabmoStatus(status)
     #DEBUG
-    msg.printMe()
-    print("\n\n\n\n")
+    #msg.printMe()
+    #print("\n\n\n\n")
     #DEBUG
-    state = msg.get("state")
-    out1 = msg.get("out1")
+    state = msg.get_key("state")
+    out1 = msg.get_key("out1")
+    message = msg.get_sub_key("info", "message")
     MessageMonitor.setState(state)
     MessageMonitor.setOut1(out1)
+    MessageMonitor.setMsg(message)
 
 # implemented from server to client
 @sio.on('change')

@@ -31,8 +31,8 @@ def dev_check_one(results):
         results["msg"] = "timed out while waiting for running"
         return 
 
-    print("waiting for pause at end of file")
-    success = mm.wait_for_state("paused", 600)
+    print("wait for message at the end of the file, indicating completion")
+    success = mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600)
     if success:
         print("now paused")
     else:
