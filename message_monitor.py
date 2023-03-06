@@ -17,7 +17,7 @@ class MessageMonitor:
         "state" : "notYet",
         "out1" : "notYet"
     }
-    
+
     @staticmethod
     def setState(state):
         lock.acquire()
@@ -114,7 +114,7 @@ class MessageMonitor:
     #public method
     def clear_all_state(self):
         MessageMonitor.setState("notYet")
-        MessageMonitor.setChange("state")
+        MessageMonitor.setChange("notChange")
         MessageMonitor.setOut1("notOutput")
 
     # public method
@@ -124,7 +124,7 @@ class MessageMonitor:
 #################################################################
 # everything from here on down is meant to be private
 # and is a mess - need to figure out how to hide this in the 
-# class above or make a module that can be a memboer of the class above
+# class above or make a module that can be a member of the class above
 #
 # Internal socketio server 
 #  to make API work:
