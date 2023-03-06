@@ -99,7 +99,19 @@ class Job:
 
     def clear_job_queue(self):
         r = requests.delete(f'{config.API_URL}/jobs/queue')
- 
+
+    def run_next_job_in_queue(self):
+        r = requests.post(f'{config.API_URL}/jobs/queue/run')
+
+    def resume_job(self):
+        r = requests.post(f'{config.API_URL}/resume')
+
+    def pause_job(self):
+        r = requests.post(f'{config.API_URL}/pause')
+
+    def quit_job(self):
+        r = requests.post(f'{config.API_URL}/quit')
+
 if __name__ == "__main__":
     job = Job()
 

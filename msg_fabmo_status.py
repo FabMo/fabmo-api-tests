@@ -5,7 +5,7 @@ class FabmoStatus:
         self.dictionary = statusText
 
     def get(self, key):
-        return self.dictionary[key]        
+        return self.dictionary[key]
 
     def printMe(self):
         for key in self.dictionary.keys():
