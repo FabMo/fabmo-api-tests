@@ -8,6 +8,7 @@ global mm
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
+job.clear_job_queue()
 
 # timeout is how long to wait for the expected state before giving up
 # interval is how long to sleep between pause and resume

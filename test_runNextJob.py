@@ -8,12 +8,13 @@ from job import Job
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
+job = Job()
+job.clear_job_queue()
 
 # Runs the job that is currently in the job manager queue
 # Currently, It is hard coded to handle a file with a pause at the end
 # Will improve later
 def runNextJob(results):
-    job = Job()
     r = requests.post(f'{config.API_URL}/jobs/queue/run')
     if r.status_code != 200:
         results["code"] = False

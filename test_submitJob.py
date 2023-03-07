@@ -7,9 +7,10 @@ from job import Job
 global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
+job = Job()
+job.clear_job_queue()
 
 def submitJob(results):
-    job = Job()
     filename = "test.sbp"
     name = "testing submitJob"
     description = "test_description"
