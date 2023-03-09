@@ -24,3 +24,7 @@ To run a test and see the output,
 
 To run all tests and see the output,
  > pytest -s
+
+IMPORTANT!
+Currently requires fabmo-engine change https://github.com/FabMo/FabMo-Engine/commit/680f8dd03f5fc7f5b800881056742851982e2f27
+Until a PR is submitted
