@@ -166,10 +166,11 @@ async def onStatus(status):
     out1 = msg.get_key("out1")
     #TODO, there is a bug were retrieving sub keys sometimes causes
     # issues, I think it happens when there is no sub key to retrieve
-    #message = msg.get_sub_key("info", "message")
+    #Specifically it happens when trying to retrieve an error message
+    message = msg.get_sub_key("info", "message")
     MessageMonitor.setState(state)
     MessageMonitor.setOut1(out1)
-    #MessageMonitor.setMsg(message)
+    MessageMonitor.setMsg(message)
 
 # implemented from server to client
 @sio.on('change')

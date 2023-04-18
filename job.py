@@ -2,6 +2,10 @@ import requests
 import time
 from config import config
 import io, codecs, mimetypes, sys, uuid
+from message_monitor import MessageMonitor
+
+global mm
+mm = MessageMonitor()
 
 # MultipartFormdataEncoder is a legacy class that is necessary for 
 # submitting a new job to fabmo, I would love to see this class go away.
@@ -121,6 +125,34 @@ class Job:
         r = requests.get(f'{config.API_URL}/jobs/queue')
         assert r.status_code == 200
         return r.json()
+
+    # timeout is how long to wait for the expected state before giving up
+    # interval is how long to sleep between pause and resume
+    # repetitions dictates how many times a pause and resume will occur
+    def pause_resume(self, timeout, interval, repetitions):
+        for x in range(repetitions):
+            print(f"pausing {x}")
+            self.pause_job()
+            print("waiting for paused")
+            success = mm.wait_for_state("paused", timeout)
+            if success:
+                print("now paused")
+            else:
+                print("Timed out waiting for pause")
+                return False
+            time.sleep(interval)
+        
+            print(f"resuming {x}")
+            self.resume_job()
+            print("waiting for resume")
+            success = mm.wait_for_state("running", timeout)
+            if success:
+                print("now running")
+            else:
+                print("Timed out waiting for resume")
+                return False
+            time.sleep(interval)
+        return True
 
 if __name__ == "__main__":
     job = Job()
