@@ -12,6 +12,7 @@ macro_number = 0
 job = Job()
 
 def quit_successfully(results):
+    print("Test quit successfully")
     macro_number = 211
     r = requests.post(f'{config.API_URL}/macros/{macro_number}/run')
     if r.status_code != 200:

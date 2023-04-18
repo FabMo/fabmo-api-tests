@@ -164,6 +164,9 @@ async def onStatus(status):
     #DEBUG
     state = msg.get_key("state")
     out1 = msg.get_key("out1")
+    #TODO, there is a bug were retrieving sub keys sometimes causes
+    # issues, I think it happens when there is no sub key to retrieve
+    #Specifically it happens when trying to retrieve an error message
     message = msg.get_sub_key("info", "message")
     MessageMonitor.setState(state)
     MessageMonitor.setOut1(out1)

@@ -1,0 +1,50 @@
+'Generic testing of looping that reports action in A axis and confirms in Y values
+' *note: will move the Y axis a bit
+' **Try breaking this file in motion and in PAUSE
+
+' ** MIGHT HAVE TO HIT ESC IF NO STOP BUTTON APPEARS
+&report = 0
+&in_Y = 0
+
+test_loop:
+GOSUB sub1
+GOSUB sub2
+GOSUB sub3
+if &report > 1 THEN GOSUB sub4
+if &report > 1 THEN GOSUB sub5
+MA, &report
+PAUSE 1
+GOTO test_loop
+END
+
+sub1:
+&report = &report + 1
+MX,(%(1) + .01)
+MA, &report
+RETURN
+
+sub2:
+&report = &report + 1
+MA, &report
+RETURN
+
+sub3:
+&report = &report + 1
+MA, &report
+RETURN
+
+sub4:
+&report = &report - 1
+&in_Y = &in_Y + .1
+MY,&in_Y
+MA, &report
+RETURN
+
+sub5:
+&in_Y = &in_Y - .1
+MY,&in_Y
+&report = &report - 1
+MY,0
+MA, &report
+RETURN
+    

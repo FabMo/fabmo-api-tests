@@ -10,6 +10,7 @@ mm.clear_all_state()
 macro_number = 0
 
 def runMacro_five(results):
+    print("Test macro 5")
     macro_number = 5
     # Make request to run macro 5
     r = requests.post(f'{config.API_URL}/macros/{macro_number}/run')
