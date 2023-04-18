@@ -28,7 +28,7 @@ class MessageMonitor:
     @staticmethod
     def getState():
         lock.acquire()
-        rc = MessageMonitor.eventsReceived["state"] 
+        rc = MessageMonitor.eventsReceived["state"]
         lock.release()
         return rc
 
@@ -41,7 +41,7 @@ class MessageMonitor:
     @staticmethod
     def getChange():
         lock.acquire()
-        rc = MessageMonitor.eventsReceived["change"] 
+        rc = MessageMonitor.eventsReceived["change"]
         lock.release()
         return rc
 
@@ -77,26 +77,26 @@ class MessageMonitor:
 
     # async wait_for_state(state2wait4, timeout):
     #
-    # This function will block until # the socketio status 
+    # This function will block until # the socketio status
     # first shows the state indicated in state2wait4 parameter
-    #   if the message has already arrived, then 
+    #   if the message has already arrived, then
     #     the function will return a true value immediately
     #   if the message arrives before the time out, then
-    #     the function returns a true value once the msg 
+    #     the function returns a true value once the msg
     #     has been parsed
     #   if the time out is reached it will return false value
     #     after the timeout
     # Return values: false means "timed out"
     #
     # Usage:
-    # call this function with a string representing the specific status 
+    # call this function with a string representing the specific status
     # that you want to know has happened E.g. You have commanded over API
     # that a job start, and want to know that it has started, so call:
     #       wait_for_status("running")
     # then maybe call
     #       wait_for_status("idle")
-    # 
-    # Note: you may want to call clear_all_state() before starting a test 
+    #
+    # Note: you may want to call clear_all_state() before starting a test
     #    case to make sure that you start with no "holdever" messages from
     #    prior test cases.
     #######################################################
@@ -132,7 +132,7 @@ class MessageMonitor:
     #public method
 #    def wait_for_change(self, change2wait4, timeout):
 ##        print(f"{change2wait4}, {timeout}")
-        
+
     #public method
     def clear_all_state(self):
         MessageMonitor.setState("notYet")
@@ -145,14 +145,13 @@ class MessageMonitor:
 
 #################################################################
 # everything from here on down is meant to be private
-# and is a mess - need to figure out how to hide this in the 
+# and is a mess - need to figure out how to hide this in the
 # class above or make a module that can be a member of the class above
 #
-# Internal socketio server 
+# Internal socketio server
 #  to make API work:
 
 sio = socketio.AsyncClient()
- 
 
 # implemented from server to client
 @sio.on('status')
