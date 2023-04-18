@@ -16,6 +16,7 @@ job.submit()
 # Currently, It is hard coded to handle a file with a pause at the end
 # Will improve later
 def runNextJob(results):
+    print("Test run next job currently in queue")
     r = requests.post(f'{config.API_URL}/jobs/queue/run')
     if r.status_code != 200:
         results["code"] = False

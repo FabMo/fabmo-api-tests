@@ -10,6 +10,7 @@ mm.clear_all_state()
 macro_number = 0
 
 def runMacro_two_hundred_one(results):
+    print("Test macro 201")
     macro_number = 201 
     r = requests.post(f'{config.API_URL}/macros/{macro_number}/run')
     if r.status_code != 200:
