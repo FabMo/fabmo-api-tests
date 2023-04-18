@@ -13,7 +13,7 @@ job.clear_job_queue()
 def dev_check_seven(results):
     print("Testing dev_check_seven subs and loops")
 
-    filename = "dev_check_seven_subs_loops.sbp"
+    filename = "dev_check_seven_file_with_macro_9.sbp"
     name = "testing dev check seven"
     description = "testing dev check seven file with macro 9 post"
 
@@ -42,11 +42,11 @@ def thread_for_mm(args):
 
 # test function
 
-def test_dev_check_five():
+def test_dev_check_seven():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
     results = {"code":False, "msg":""}
-    testThread = threading.Thread(target=dev_check_five, args=(results,))
+    testThread = threading.Thread(target=dev_check_seven, args=(results,))
 
     # test sequence 
     messageMonitorThread.start() 
@@ -61,5 +61,5 @@ def test_dev_check_five():
  
 if __name__ == "__main__":
     print(config.API_URL)
-    print("Testing dev_check_five")
-    test_dev_check_five()
+    print("Testing dev_check_seven")
+    test_dev_check_seven()
