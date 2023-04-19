@@ -60,7 +60,7 @@ def dev_check_one(results):
         results["msg"] = "timed out while waiting for running"
         return 
 
-    pause_resume(10, 3, 10)
+    pause_resume(10, 3, 5)
 
     print("wait for message at the end of the file, indicating completion")
     success = mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600)

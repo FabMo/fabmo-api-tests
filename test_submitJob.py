@@ -43,6 +43,10 @@ def submitJob(results):
                     else:
                         print("Job submitted successfully")
 
+    # Clear the queue so that there is not an unexpected job in
+    # the queue during the next test
+    job.clear_job_queue()
+
     # Did test pass?
     results["code"] = True
     results["msg"] = "success"
