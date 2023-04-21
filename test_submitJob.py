@@ -4,7 +4,6 @@ from config import config
 from message_monitor import MessageMonitor
 from job import Job
 
-global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
@@ -20,14 +19,14 @@ def submitJob(results):
     job.clear_job_queue()
     queue = job.get_job_queue()
     if queue and 'data' in queue:
-            if 'jobs' in queue['data']:
-                if 'pending' in queue['data']['jobs']:
-                    if queue['data']['jobs']['pending'] == []:
-                        print("Job queue is clear")
-                    else:
-                        results["code"] = False
-                        results["msg"] = "Job queue is NOT clear"
-                        return
+        if 'jobs' in queue['data']:
+            if 'pending' in queue['data']['jobs']:
+                if queue['data']['jobs']['pending'] == []:
+                    print("Job queue is clear")
+                else:
+                    results["code"] = False
+                    results["msg"] = "Job queue is NOT clear"
+                    return
 
     # Submit the job
     job.submit(filename, name, description)
@@ -35,21 +34,21 @@ def submitJob(results):
     # Check that the submitted job is in the queue
     queue = job.get_job_queue()
     if queue and 'data' in queue:
-            if 'jobs' in queue['data']:
-                if 'pending' in queue['data']['jobs']:
-                    if queue['data']['jobs']['pending'] == []:
-                        results["code"] = False
-                        results["msg"] = "Job not submmited successfully"
-                        return
-                    else:
-                        print("Job submitted successfully")
+        if 'jobs' in queue['data']:
+            if 'pending' in queue['data']['jobs']:
+                if queue['data']['jobs']['pending'] == []:
+                    results["code"] = False
+                    results["msg"] = "Job not submmited successfully"
+                    return
+                else:
+                    print("Job submitted successfully")
 
     job.clear_job_queue()
 
     # Did test pass?
     results["code"] = True
     results["msg"] = "success"
-    return 
+    return
 
 def thread_for_mm(args):
     mm.run()
@@ -62,8 +61,8 @@ def test_submitJob():
     results = {"code":False, "msg":""}
     testThread = threading.Thread(target=submitJob, args=(results,))
 
-    # test sequence 
-    messageMonitorThread.start() 
+    # test sequence
+    messageMonitorThread.start()
     time.sleep(1) # time for the MessageMonitor to get up and running
     testThread.start()
     testThread.join() #waiting for the test to return
@@ -71,9 +70,8 @@ def test_submitJob():
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)
     #print(results)
-    assert(results["code"] == True)
- 
+    assert results["code"] is True
+
 if __name__ == "__main__":
     print(config.API_URL)
     test_submitJob()
-

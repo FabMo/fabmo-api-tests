@@ -1,3 +1,7 @@
+#Test is not currently working!!
+#The error message cannot be resolved by posting
+#A resume, or a quit. Not sure how to proceed.
+
 import time
 import threading
 from config import config
@@ -6,16 +10,15 @@ from job import Job
 
 mm = MessageMonitor()
 mm.clear_all_state()
-
 job = Job()
 job.clear_job_queue()
 
-def dev_check_five(results):
-    print("Testing dev_check_five subs and loops")
+def dev_check_two(results):
+    print("Testing dev_check_two error reporting")
 
-    filename = "dev_check_five_subs_loops.sbp"
-    name = "testing dev check five"
-    description = "testing dev check five subs and loops"
+    filename = "dev_check_two_error_reporting.sbp"
+    name = "testing dev check two"
+    description = "testing dev check two"
 
     # Submit the job
     job.submit(filename, name, description)
@@ -23,23 +26,28 @@ def dev_check_five(results):
     # Run the Job
     job.run_next_job_in_queue()
 
-    # Wait for 5 minutes, then quit
-    # TODO should add various pause and resumes test cases
-    time.sleep(300)
-    job.pause_job()
-    time.sleep(2)
-    job.quit_job()
+    print("wait for first message")
+    time.sleep(3)
 
-    # Make sure we are in an expected state
-    # If something went wrong, we will probably not be idle
-    print("waiting for idle")
-    success = mm.wait_for_state("idle", 10)
+    job.resume_job()
+
+    print("wait for error message")
+    success = mm.wait_for_state("idle", 5)
     if success:
-        print("now idle")
+        print("Error message reached")
     else:
         results["code"] = False
-        results["msg"] = "timed out while waiting for idle"
+        results["msg"] = "timed out while waiting for error message"
         return
+
+    # print("waiting for idle")
+    # success = mm.wait_for_state("idle", 10)
+    # if success:
+    #     print("now idle")
+    # else:
+    #     results["code"] = False
+    #     results["msg"] = "timed out while waiting for idle"
+    #     return
 
     # Did tests pass?
     results["code"] = True
@@ -51,11 +59,11 @@ def thread_for_mm(args):
 
 # test function
 
-def test_dev_check_five():
+def test_dev_check_two():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
     results = {"code":False, "msg":""}
-    testThread = threading.Thread(target=dev_check_five, args=(results,))
+    testThread = threading.Thread(target=dev_check_two, args=(results,))
 
     # test sequence
     messageMonitorThread.start()
@@ -70,5 +78,5 @@ def test_dev_check_five():
 
 if __name__ == "__main__":
     print(config.API_URL)
-    print("Testing dev_check_five")
-    test_dev_check_five()
+    print("Testing dev_check_two")
+    test_dev_check_two()

@@ -175,7 +175,7 @@ async def onStatus(status):
 @sio.on('change')
 async def onChange(change):
     MessageMonitor.setChange(change)
-    print(f"MessageMonitor.change: {change}\n")
+    #print(f"MessageMonitor.change: {change}\n")
 
 @sio.on('job_start')
 async def onStart(start_info):

@@ -1,23 +1,24 @@
-import requests
 import time
 import threading
+import requests
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
 
-global mm 
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
 job.clear_job_queue()
-job.submit()
 
 # Runs the job that is currently in the job manager queue
-# Currently, It is hard coded to handle a file with a pause at the end
-# Will improve later
 def runNextJob(results):
+    filename = "sample_shopbot_logo.sbp"
+    name = "testing dev check one"
+    description = "test_description"
+    job.submit(filename, name, description)
+
     print("Test run next job currently in queue")
-    r = requests.post(f'{config.API_URL}/jobs/queue/run')
+    r = requests.post(f'{config.API_URL}/jobs/queue/run', timeout=config.TIMEOUT)
     if r.status_code != 200:
         results["code"] = False
         results["msg"] = "bad http code"
@@ -30,7 +31,7 @@ def runNextJob(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for running"
-        return 
+        return
 
     print("wait for message at the end of the file, indicating completion")
     success = mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600)
@@ -39,7 +40,7 @@ def runNextJob(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for ShopBot Logo to complete"
-        return 
+        return
 
     job.resume_job()
 
@@ -50,14 +51,14 @@ def runNextJob(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for idle"
-        return 
+        return
 
     results["code"] = True
     results["msg"] = "success"
-    return 
+    return
 
 def thread_for_mm(args):
-    mm.run() 
+    mm.run()
 
 # test function
 def test_runNextJob():
@@ -66,8 +67,8 @@ def test_runNextJob():
     results = {"code":False, "msg":""}
     testThread = threading.Thread(target=runNextJob, args=(results,))
 
-    # test sequence 
-    messageMonitorThread.start() 
+    # test sequence
+    messageMonitorThread.start()
     time.sleep(1) # time for the MessageMonitor to get up and running
     testThread.start()
     testThread.join() #waiting for the test to return
@@ -75,8 +76,8 @@ def test_runNextJob():
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)
     #print(results)
-    assert(results["code"] == True)
- 
-if __name__ == "__main__": 
-    print(config.API_URL) 
+    assert results["code"] is True
+
+if __name__ == "__main__":
+    print(config.API_URL)
     test_runNextJob()

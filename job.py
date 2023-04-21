@@ -1,19 +1,22 @@
-import requests
 import time
+import uuid
+import io
+import codecs
+import mimetypes
+import sys
+import requests
 from config import config
-import io, codecs, mimetypes, sys, uuid
 from message_monitor import MessageMonitor
 
-global mm
 mm = MessageMonitor()
 
-# MultipartFormdataEncoder is a legacy class that is necessary for 
+# MultipartFormdataEncoder is a legacy class that is necessary for
 # submitting a new job to fabmo, I would love to see this class go away.
 # The requests library probably has the means to achieve this
 class MultipartFormdataEncoder(object):
     def __init__(self):
         self.boundary = uuid.uuid4().hex
-        self.content_type = 'multipart/form-data; boundary={}'.format(self.boundary)
+        self.content_type = f"multipart/form-data; boundary={self.boundary}"
 
     @classmethod
     def u(cls, s):
@@ -32,7 +35,7 @@ class MultipartFormdataEncoder(object):
         encoder = codecs.getencoder('utf-8')
         for (key, value) in fields:
             key = self.u(key)
-            yield encoder('--{}\r\n'.format(self.boundary))
+            yield encoder(f"--{self.boundary}\r\n")
             yield encoder(self.u('Content-Disposition: form-data; name="{}"\r\n').format(key))
             yield encoder('\r\n')
             if isinstance(value, int) or isinstance(value, float):
@@ -42,15 +45,15 @@ class MultipartFormdataEncoder(object):
         for (key, filename, fd) in files:
             key = self.u(key)
             filename = self.u(filename)
-            yield encoder('--{}\r\n'.format(self.boundary))
-            yield encoder(self.u('Content-Disposition: form-data; name="{}"; filename="{}"\r\n').format(key, filename))
-            yield encoder('Content-Type: {}\r\n'.format(mimetypes.guess_type(filename)[0] or 'application/octet-stream'))
+            yield encoder(f"--{self.boundary}\r\n")
+            yield encoder(self.u(f"Content-Disposition: form-data; name=\"{key}\"; filename=\"{filename}\"\r\n"))
+            yield encoder(f"Content-Type: {mimetypes.guess_type(filename)[0] or 'application/octet-stream'}\r\n")
             yield encoder('\r\n')
             with fd:
                 buff = fd.read()
                 yield (buff, len(buff))
             yield encoder('\r\n')
-        yield encoder('--{}--\r\n'.format(self.boundary))
+        yield encoder(f"--{self.boundary}--\r\n")
 
     def encode(self, fields, files):
         body = io.BytesIO()
@@ -62,7 +65,6 @@ class MultipartFormdataEncoder(object):
 class Job:
     def __init__(self):
         self.initialized = 1
-    
     #public method
     #Takes three optional arguments
     #The most important is the filename, which must exist in the local jobs directory
@@ -70,7 +72,7 @@ class Job:
     def submit(self, filename = "sample_shopbot_logo.sbp", name = "test_name", description="test_description"):
         # Setup for requests
         key = ''
-        with open('jobs/' + filename, 'r') as file:
+        with open('jobs/' + filename, 'r', encoding="utf8") as file:
             codes = file.read()
 
         metadata = {
@@ -85,7 +87,7 @@ class Job:
         }
 
         # First request
-        r = requests.post(f'{config.API_URL}/job', json=metadata)
+        r = requests.post(f'{config.API_URL}/job', json=metadata, timeout=config.TIMEOUT)
 
         # Setup for second request
         # Extract key from first response json
@@ -99,30 +101,30 @@ class Job:
         headers = {"Content-type": content_type, "Accept":"text/plain"}
 
         # Second request
-        r = requests.post(f'{config.API_URL}/job', data=body, headers=headers)
+        r = requests.post(f'{config.API_URL}/job', data=body, headers=headers, timeout=config.TIMEOUT)
 
     def clear_job_queue(self):
-        r = requests.delete(f'{config.API_URL}/jobs/queue')
+        r = requests.delete(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
 
     def run_next_job_in_queue(self):
-        r = requests.post(f'{config.API_URL}/jobs/queue/run')
+        r = requests.post(f'{config.API_URL}/jobs/queue/run', timeout=config.TIMEOUT)
 
     def resume_job(self):
-        r = requests.post(f'{config.API_URL}/resume')
+        r = requests.post(f'{config.API_URL}/resume', timeout=config.TIMEOUT)
 
     def pause_job(self):
-        r = requests.post(f'{config.API_URL}/pause')
+        r = requests.post(f'{config.API_URL}/pause', timeout=config.TIMEOUT)
 
     def quit_job(self):
-        r = requests.post(f'{config.API_URL}/quit')
+        r = requests.post(f'{config.API_URL}/quit', timeout=config.TIMEOUT)
 
-    def get_job_by_id(self, id):
-        r = requests.get(f'{config.API_URL}/job/{id}')
+    def get_job_by_id(self, job_id):
+        r = requests.get(f'{config.API_URL}/job/{job_id}', timeout=config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
 
     def get_job_queue(self):
-        r = requests.get(f'{config.API_URL}/jobs/queue')
+        r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
 
@@ -141,7 +143,7 @@ class Job:
                 print("Timed out waiting for pause")
                 return False
             time.sleep(interval)
-        
+
             print(f"resuming {x}")
             self.resume_job()
             print("waiting for resume")
@@ -156,4 +158,3 @@ class Job:
 
 if __name__ == "__main__":
     job = Job()
-

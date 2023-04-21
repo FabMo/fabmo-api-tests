@@ -1,20 +1,19 @@
-import requests
 import time
 import threading
+import requests
 from config import config
 from message_monitor import MessageMonitor
 
-global mm
 mm = MessageMonitor()
 mm.clear_all_state()
-macro_number = 0
 
 def runMacro_five(results):
     print("Test macro 5")
     macro_number = 5
     # Make request to run macro 5
-    r = requests.post(f'{config.API_URL}/macros/{macro_number}/run')
+    r = requests.post(f'{config.API_URL}/macros/{macro_number}/run', timeout=config.TIMEOUT)
     if r.status_code != 200:
+        print("Request was not successful")
         results["code"] = False
         results["msg"] = "bad http code"
         return
@@ -28,11 +27,11 @@ def runMacro_five(results):
         results["code"] = False
         results["msg"] = "timed out while waiting for output"
         return
-    
+
     # Wait for idle at end of file, signaling that the file completed
     print("waiting for idle, end of macro 5")
     time.sleep(1)
-    success = mm.wait_for_state("idle", 150) 
+    success = mm.wait_for_state("idle", 150)
     if success:
         print("macro 5 completed successfully")
     else:
@@ -42,7 +41,7 @@ def runMacro_five(results):
 
     results["code"] = True
     results["msg"] = "success"
-    return 
+    return
 
 def thread_for_mm(args):
     mm.run()
@@ -54,8 +53,8 @@ def test_runMacro_five():
     results = {"code":False, "msg":""}
     testThread = threading.Thread(target=runMacro_five, args=(results,))
 
-    # test sequence 
-    messageMonitorThread.start() 
+    # test sequence
+    messageMonitorThread.start()
     time.sleep(1) # time for the MessageMonitor to get up and running
     testThread.start()
     testThread.join() #waiting for the test to return
@@ -63,8 +62,8 @@ def test_runMacro_five():
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)
     #print(results)
-    assert(results["code"] == True)
- 
-if __name__ == "__main__": 
-    print(config.API_URL) 
+    assert results["code"] is True
+
+if __name__ == "__main__":
+    print(config.API_URL)
     test_runMacro_five()

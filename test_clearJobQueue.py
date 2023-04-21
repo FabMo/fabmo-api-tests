@@ -3,6 +3,5 @@ from config import config
 
 def test_clearJobQueue():
     print("Test clear job queue, not fully implemented")
-    r = requests.delete(f'{config.API_URL}/jobs/queue')
+    r = requests.delete(f'{config.API_URL}/jobs/queue', timeout = config.TIMEOUT)
     assert r.status_code == 200
-

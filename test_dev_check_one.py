@@ -4,9 +4,9 @@ from config import config
 from message_monitor import MessageMonitor
 from job import Job
 
-global mm
 mm = MessageMonitor()
 mm.clear_all_state()
+
 job = Job()
 job.clear_job_queue()
 
@@ -31,7 +31,7 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for running"
-        return 
+        return
 
     print("wait for message at the end of the file, indicating completion")
     success = mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600)
@@ -40,7 +40,7 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for ShopBot Logo to complete"
-        return 
+        return
 
     job.resume_job()
 
@@ -51,7 +51,7 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for idle"
-        return 
+        return
     ###########################################################################
 
     ###########################################################################
@@ -74,7 +74,7 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for running"
-        return 
+        return
 
     job.pause_job()
     time.sleep(2)
@@ -87,7 +87,7 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for ShopBot Logo to quit"
-        return 
+        return
     ###########################################################################
 
     ###########################################################################
@@ -110,7 +110,7 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for running"
-        return 
+        return
 
     print("Starting a pause and resume loop")
     success = job.pause_resume(10, 3, 5)
@@ -128,7 +128,7 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for ShopBot Logo to complete"
-        return 
+        return
 
     job.resume_job()
 
@@ -139,13 +139,13 @@ def dev_check_one(results):
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for idle"
-        return 
+        return
     ###########################################################################
 
     # Did tests pass?
     results["code"] = True
     results["msg"] = "success"
-    return 
+    return
 
 def thread_for_mm(args):
     mm.run()
@@ -158,8 +158,8 @@ def test_dev_check_one():
     results = {"code":False, "msg":""}
     testThread = threading.Thread(target=dev_check_one, args=(results,))
 
-    # test sequence 
-    messageMonitorThread.start() 
+    # test sequence
+    messageMonitorThread.start()
     time.sleep(1) # time for the MessageMonitor to get up and running
     testThread.start()
     testThread.join() #waiting for the test to return
@@ -167,10 +167,9 @@ def test_dev_check_one():
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)
     #print(results)
-    assert(results["code"] == True)
- 
+    assert results["code"] is True
+
 if __name__ == "__main__":
     print(config.API_URL)
     print("Testing dev_check_one")
     test_dev_check_one()
-

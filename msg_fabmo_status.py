@@ -26,4 +26,3 @@ class FabmoStatus:
                     print(f"       {info_key} : {self.dictionary[key].get_key(info_key)}")
             else:
                 print(f"{key} : {self.dictionary.get_key(key)}")
- 
