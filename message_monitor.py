@@ -151,7 +151,12 @@ class MessageMonitor:
 # Internal socketio server
 #  to make API work:
 
+# Using the global keyword below for connected
+# This is to prevent socketio from attempting to reconnect
+# If it is already connected
+
 sio = socketio.AsyncClient()
+connected = False
 
 # implemented from server to client
 @sio.on('status')
@@ -187,10 +192,14 @@ async def onEnd(end_info):
 
 @sio.on('connect')
 async def onConnect():
+    global connected
+    connected = True
     print("Websocket connected\n")
 
 @sio.on('disconnect')
 async def onDisconnect():
+    global connected
+    connected = False
     print("Websocket disconnected\n")
 
 @sio.event
@@ -198,8 +207,10 @@ async def disconnect():
     print('disconnected from server\n')
 
 async def main():
-    await sio.connect(f'{config.API_URL}')
-    await sio.wait()
+    global connected
+    if not connected:
+        await sio.connect(f'{config.API_URL}')
+        await sio.wait()
 
 
 if __name__ == '__main__':

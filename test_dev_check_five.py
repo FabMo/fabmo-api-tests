@@ -65,7 +65,7 @@ def test_dev_check_five():
 
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)
-    #print(results)
+    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":

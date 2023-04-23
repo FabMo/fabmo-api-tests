@@ -59,7 +59,7 @@ def test_runMacro_two_hundred_one():
 
     #reporting results
     # debug (i'm sure there is pytest way to turn this on and off)
-    #print(results)
+    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":

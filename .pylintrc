@@ -9,3 +9,5 @@ disable =
     C0301, # line-too-long
     W0613, # unused-argument
     W0511, # no-TODO
+    W0602, # global-variable-not-assigned
+    W0603, # global-variable
