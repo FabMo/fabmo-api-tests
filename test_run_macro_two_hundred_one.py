@@ -3,51 +3,35 @@ import threading
 import requests
 from config import config
 from message_monitor import MessageMonitor
-from job import Job
 
 mm = MessageMonitor()
 mm.clear_all_state()
-job = Job()
-job.clear_job_queue()
 
-# Runs the job that is currently in the job manager queue
-def runNextJob(results):
-    filename = "sample_shopbot_logo.sbp"
-    name = "testing dev check one"
-    description = "test_description"
-    job.submit(filename, name, description)
-
-    print("Test run next job currently in queue")
-    r = requests.post(f'{config.API_URL}/jobs/queue/run', timeout=config.TIMEOUT)
+def run_macro_two_hundred_one(results):
+    print("Test macro 201")
+    macro_number = 201
+    r = requests.post(f'{config.API_URL}/macros/{macro_number}/run', timeout=config.TIMEOUT)
     if r.status_code != 200:
         results["code"] = False
         results["msg"] = "bad http code"
         return
 
+    # Wait for running state
     print("waiting for running")
-    success = mm.wait_for_state("running", 10)
+    time.sleep(0.5)
+    success = mm.wait_for_state("running", 5)
     if success:
-        print("now running")
+        print("macro 201 is running")
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for running"
         return
 
-    print("wait for message at the end of the file, indicating completion")
-    success = mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600)
-    if success:
-        print("DONE with ShopBot Logo")
-    else:
-        results["code"] = False
-        results["msg"] = "timed out while waiting for ShopBot Logo to complete"
-        return
-
-    job.resume_job()
-
-    print("waiting for idle")
+    # Wait for idle at end of file, signaling that the file completed
+    print("waiting for idle, end of macro 201")
     success = mm.wait_for_state("idle", 10)
     if success:
-        print("now idle")
+        print("macro 201 completed successfully")
     else:
         results["code"] = False
         results["msg"] = "timed out while waiting for idle"
@@ -61,11 +45,11 @@ def thread_for_mm(args):
     mm.run()
 
 # test function
-def test_runNextJob():
+def test_run_macro_two_hundred_one():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
     results = {"code":False, "msg":""}
-    testThread = threading.Thread(target=runNextJob, args=(results,))
+    testThread = threading.Thread(target=run_macro_two_hundred_one, args=(results,))
 
     # test sequence
     messageMonitorThread.start()
@@ -80,4 +64,4 @@ def test_runNextJob():
 
 if __name__ == "__main__":
     print(config.API_URL)
-    test_runNextJob()
+    test_run_macro_two_hundred_one()

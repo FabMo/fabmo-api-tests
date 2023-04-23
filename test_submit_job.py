@@ -9,7 +9,7 @@ mm.clear_all_state()
 job = Job()
 job.clear_job_queue()
 
-def submitJob(results):
+def submit_job(results):
     print("testing submit_job")
     filename = "test.sbp"
     name = "testing submitJob"
@@ -55,11 +55,11 @@ def thread_for_mm(args):
 
 # test function
 
-def test_submitJob():
+def test_submit_job():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
     results = {"code":False, "msg":""}
-    testThread = threading.Thread(target=submitJob, args=(results,))
+    testThread = threading.Thread(target=submit_job, args=(results,))
 
     # test sequence
     messageMonitorThread.start()
@@ -74,4 +74,4 @@ def test_submitJob():
 
 if __name__ == "__main__":
     print(config.API_URL)
-    test_submitJob()
+    test_submit_job()

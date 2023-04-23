@@ -25,3 +25,4 @@ To run a test and see the output,
 To run all tests and see the output,
  > pytest -s
 
+This is intended to be ran on the ShopBot Desktop profile

@@ -8,7 +8,7 @@ from config import config
 
 job_to_submit = 3
 
-def test_resubmitJob():
+def test_resubmit_job():
     print("Test resubmit job, not fully implemented")
     r = requests.post(f'{config.API_URL}/job/{job_to_submit}', timeout=config.TIMEOUT)
     assert r.status_code == 200
