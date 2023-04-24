@@ -1,22 +1,19 @@
 import time
 import threading
-import requests
 from config import config
 from message_monitor import MessageMonitor
+from macro import Macro
 
 mm = MessageMonitor()
 mm.clear_all_state()
+
+macro = Macro()
 
 def run_macro_five(results):
     print("Test macro 5")
     macro_number = 5
     # Make request to run macro 5
-    r = requests.post(f'{config.API_URL}/macros/{macro_number}/run', timeout=config.TIMEOUT)
-    if r.status_code != 200:
-        print("Request was not successful")
-        results["code"] = False
-        results["msg"] = "bad http code"
-        return
+    macro.run_macro(macro_number)
 
     print("Waiting for output 1, spindle on")
     time.sleep(1)

@@ -29,7 +29,7 @@ def dev_check_two(results):
     print("wait for first message")
     time.sleep(3)
 
-    job.resume_job()
+    job.resume()
 
     print("wait for error message")
     success = mm.wait_for_state("idle", 5)

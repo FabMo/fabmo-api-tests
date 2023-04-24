@@ -1,20 +1,18 @@
 import time
 import threading
-import requests
 from config import config
 from message_monitor import MessageMonitor
+from macro import Macro
 
 mm = MessageMonitor()
 mm.clear_all_state()
 
+macro = Macro()
+
 def run_macro_two_hundred_one(results):
     print("Test macro 201")
     macro_number = 201
-    r = requests.post(f'{config.API_URL}/macros/{macro_number}/run', timeout=config.TIMEOUT)
-    if r.status_code != 200:
-        results["code"] = False
-        results["msg"] = "bad http code"
-        return
+    macro.run_macro(macro_number)
 
     # Wait for running state
     print("waiting for running")

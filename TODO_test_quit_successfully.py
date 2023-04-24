@@ -2,23 +2,20 @@
 
 import time
 import threading
-import requests
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
+from macro import Macro
 
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
+macro = Macro()
 
 def quit_successfully(results):
     print("Test quit successfully")
     macro_number = 211
-    r = requests.post(f'{config.API_URL}/macros/{macro_number}/run', timeout = config.TIMEOUT)
-    if r.status_code != 200:
-        results["code"] = False
-        results["msg"] = "bad http code"
-        return
+    macro.run_macro(macro_number)
 
     # Wait for running state
     print("waiting for running")
@@ -35,9 +32,9 @@ def quit_successfully(results):
     # after starting the file
     time.sleep(3)
 
-    job.pause_job()
+    job.pause()
     time.sleep(2)
-    job.quit_job()
+    job.quit()
 
     # Wait for running after sending quit. Job should not run at all.
     print("waiting for running signaling a failed quit")

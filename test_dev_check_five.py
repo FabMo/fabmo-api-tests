@@ -26,9 +26,9 @@ def dev_check_five(results):
     # Wait for 5 minutes, then quit
     # TODO should add various pause and resumes test cases
     time.sleep(300)
-    job.pause_job()
+    job.pause()
     time.sleep(2)
-    job.quit_job()
+    job.quit()
 
     # Make sure we are in an expected state
     # If something went wrong, we will probably not be idle

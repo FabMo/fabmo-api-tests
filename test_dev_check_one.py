@@ -42,7 +42,7 @@ def dev_check_one(results):
         results["msg"] = "timed out while waiting for ShopBot Logo to complete"
         return
 
-    job.resume_job()
+    job.resume()
 
     print("waiting for idle")
     success = mm.wait_for_state("idle", 10)
@@ -76,9 +76,9 @@ def dev_check_one(results):
         results["msg"] = "timed out while waiting for running"
         return
 
-    job.pause_job()
+    job.pause()
     time.sleep(2)
-    job.quit_job()
+    job.quit()
 
     print("wait for idle, indicating a successful quit")
     success = mm.wait_for_state("idle", 10)
@@ -130,7 +130,7 @@ def dev_check_one(results):
         results["msg"] = "timed out while waiting for ShopBot Logo to complete"
         return
 
-    job.resume_job()
+    job.resume()
 
     print("waiting for idle")
     success = mm.wait_for_state("idle", 10)

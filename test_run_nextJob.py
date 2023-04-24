@@ -1,6 +1,5 @@
 import time
 import threading
-import requests
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
@@ -18,11 +17,7 @@ def run_next_job(results):
     job.submit(filename, name, description)
 
     print("Test run next job currently in queue")
-    r = requests.post(f'{config.API_URL}/jobs/queue/run', timeout=config.TIMEOUT)
-    if r.status_code != 200:
-        results["code"] = False
-        results["msg"] = "bad http code"
-        return
+    job.run_next_job_in_queue()
 
     print("waiting for running")
     success = mm.wait_for_state("running", 10)
@@ -42,7 +37,7 @@ def run_next_job(results):
         results["msg"] = "timed out while waiting for ShopBot Logo to complete"
         return
 
-    job.resume_job()
+    job.resume()
 
     print("waiting for idle")
     success = mm.wait_for_state("idle", 10)

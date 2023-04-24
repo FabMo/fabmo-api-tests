@@ -99,5 +99,21 @@ class App:
         r = requests.post(f'{config.API_URL}/apps', data=body, headers=headers, timeout=config.TIMEOUT)
         print(r.text)
 
+    def delete(self, app_to_delete):
+        r = requests.delete(f'{config.API_URL}/apps/{app_to_delete}', timeout=config.TIMEOUT)
+        print(r.text)
+
+    def getApps(self):
+        r = requests.get(f'{config.API_URL}/apps', timeout = config.TIMEOUT)
+        assert r.status_code == 200
+        return r.json()
+
+    def getAppConfig(self, app_id):
+        r = requests.get(f'{config.API_URL}/apps/{app_id}/config', timeout = config.TIMEOUT)
+        assert r.status_code == 200
+        return r.json()
+
+    # TODO def setAppConfig(self, app_id):
+
 if __name__ == "__main__":
     app = App()

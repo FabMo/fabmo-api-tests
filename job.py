@@ -106,16 +106,20 @@ class Job:
     def clear_job_queue(self):
         r = requests.delete(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
 
+    def delete(self, job_id):
+        r = requests.delete(f'{config.API_URL}/job/{job_id}', timeout=config.TIMEOUT)
+        print(r.text)
+
     def run_next_job_in_queue(self):
         r = requests.post(f'{config.API_URL}/jobs/queue/run', timeout=config.TIMEOUT)
 
-    def resume_job(self):
+    def resume(self):
         r = requests.post(f'{config.API_URL}/resume', timeout=config.TIMEOUT)
 
-    def pause_job(self):
+    def pause(self):
         r = requests.post(f'{config.API_URL}/pause', timeout=config.TIMEOUT)
 
-    def quit_job(self):
+    def quit(self):
         r = requests.post(f'{config.API_URL}/quit', timeout=config.TIMEOUT)
 
     def get_job_by_id(self, job_id):
@@ -128,13 +132,17 @@ class Job:
         assert r.status_code == 200
         return r.json()
 
+    # TODO def get_job_history(start, count)
+
+    # TODO def update_order()
+
     # timeout is how long to wait for the expected state before giving up
     # interval is how long to sleep between pause and resume
     # repetitions dictates how many times a pause and resume will occur
     def pause_resume(self, timeout, interval, repetitions):
         for x in range(repetitions):
             print(f"pausing {x}")
-            self.pause_job()
+            self.pause()
             print("waiting for paused")
             success = mm.wait_for_state("paused", timeout)
             if success:
@@ -145,7 +153,7 @@ class Job:
             time.sleep(interval)
 
             print(f"resuming {x}")
-            self.resume_job()
+            self.resume()
             print("waiting for resume")
             success = mm.wait_for_state("running", timeout)
             if success:
