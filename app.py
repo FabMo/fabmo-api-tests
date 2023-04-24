@@ -9,7 +9,7 @@ from config import config
 # MultipartFormdataEncoder is a legacy class that is necessary for
 # submitting a new job to fabmo, I would love to see this class go away.
 # The requests library probably has the means to achieve this
-class MultipartFormdataEncoder():
+class MultipartFormdataEncoder:
     def __init__(self):
         self.boundary = uuid.uuid4().hex
         self.content_type = f"multipart/form-data; boundary={self.boundary}"
