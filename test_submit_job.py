@@ -7,7 +7,7 @@ from job import Job
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
-job.clear_job_queue()
+job.clear_queue()
 
 def submit_job(results):
     print("testing submit_job")
@@ -16,8 +16,8 @@ def submit_job(results):
     description = "test submit job"
 
     # Clear the job queue, test that it is cleared successfully
-    job.clear_job_queue()
-    queue = job.get_job_queue()
+    job.clear_queue()
+    queue = job.get_queue()
     if queue and 'data' in queue:
         if 'jobs' in queue['data']:
             if 'pending' in queue['data']['jobs']:
@@ -32,7 +32,7 @@ def submit_job(results):
     job.submit(filename, name, description)
 
     # Check that the submitted job is in the queue
-    queue = job.get_job_queue()
+    queue = job.get_queue()
     if queue and 'data' in queue:
         if 'jobs' in queue['data']:
             if 'pending' in queue['data']['jobs']:
@@ -43,7 +43,7 @@ def submit_job(results):
                 else:
                     print("Job submitted successfully")
 
-    job.clear_job_queue()
+    job.clear_queue()
 
     # Did test pass?
     results["code"] = True

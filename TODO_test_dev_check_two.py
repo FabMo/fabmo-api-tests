@@ -11,7 +11,7 @@ from job import Job
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
-job.clear_job_queue()
+job.clear_queue()
 
 def dev_check_two(results):
     print("Testing dev_check_two error reporting")

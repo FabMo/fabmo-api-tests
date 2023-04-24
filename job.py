@@ -103,7 +103,7 @@ class Job:
         # Second request
         r = requests.post(f'{config.API_URL}/job', data=body, headers=headers, timeout=config.TIMEOUT)
 
-    def clear_job_queue(self):
+    def clear_queue(self):
         r = requests.delete(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
 
     def delete(self, job_id):
@@ -122,12 +122,12 @@ class Job:
     def quit(self):
         r = requests.post(f'{config.API_URL}/quit', timeout=config.TIMEOUT)
 
-    def get_job_by_id(self, job_id):
+    def get_by_id(self, job_id):
         r = requests.get(f'{config.API_URL}/job/{job_id}', timeout=config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
 
-    def get_job_queue(self):
+    def get_queue(self):
         r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
