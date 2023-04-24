@@ -7,7 +7,6 @@ from job import Job
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
-job.clear_queue()
 
 # Runs the job that is currently in the job manager queue
 def run_next_job(results):

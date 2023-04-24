@@ -7,7 +7,6 @@ from job import Job
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
-job.clear_queue()
 
 def submit_job(results):
     print("testing submit_job")

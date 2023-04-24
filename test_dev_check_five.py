@@ -8,7 +8,6 @@ mm = MessageMonitor()
 mm.clear_all_state()
 
 job = Job()
-job.clear_queue()
 
 def dev_check_five(results):
     print("Testing dev_check_five subs and loops")

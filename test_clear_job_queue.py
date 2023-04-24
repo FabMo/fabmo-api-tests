@@ -8,7 +8,6 @@ from job import Job
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
-job.clear_queue()
 
 def clear_job_queue(results):
     print("testing clear_job_queue")
