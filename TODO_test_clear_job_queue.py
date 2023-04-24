@@ -1,3 +1,5 @@
+# TODO not fully implementented
+
 import requests
 from config import config
 
