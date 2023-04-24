@@ -1,8 +1,5 @@
 import requests
 from config import config
-from message_monitor import MessageMonitor
-
-mm = MessageMonitor()
 
 class User:
     def __init__(self):

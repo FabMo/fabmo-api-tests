@@ -5,9 +5,6 @@ import mimetypes
 import sys
 import requests
 from config import config
-from message_monitor import MessageMonitor
-
-mm = MessageMonitor()
 
 # MultipartFormdataEncoder is a legacy class that is necessary for
 # submitting a new job to fabmo, I would love to see this class go away.
