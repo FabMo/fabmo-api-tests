@@ -1,3 +1,7 @@
+#TODO, this test runs to fast to test it by observing the fabmo state
+# A better way to test it may be to edit one of the config system
+# variables that macro 201 sets, then run 201, then observe that the change took place
+
 import time
 import threading
 from config import config
@@ -26,7 +30,7 @@ def run_macro_two_hundred_one(results):
 
     # Wait for idle at end of file, signaling that the file completed
     print("waiting for idle, end of macro 201")
-    success = mm.wait_for_state("idle", 10)
+    success = mm.wait_for_state("idle", 5)
     if success:
         print("macro 201 completed successfully")
     else:
