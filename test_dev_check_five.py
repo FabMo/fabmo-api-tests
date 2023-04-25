@@ -22,6 +22,15 @@ def dev_check_five(results):
     # Run the Job
     job.run_next_job_in_queue()
 
+    print("waiting for running")
+    success = mm.wait_for_state("running", 5)
+    if success:
+        print("now running")
+    else:
+        results["code"] = False
+        results["msg"] = "timed out while waiting for running"
+        return
+
     # Wait for 5 minutes, then quit
     # TODO should add various pause and resumes test cases
     time.sleep(300)

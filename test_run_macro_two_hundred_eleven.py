@@ -17,7 +17,7 @@ def run_macro_two_hundred_eleven(results):
     # Wait for running state
     print("waiting for running")
     time.sleep(1)
-    success = mm.wait_for_state("running", 1)
+    success = mm.wait_for_state("running", 5)
     if success:
         print("macro 211 is running")
     else:

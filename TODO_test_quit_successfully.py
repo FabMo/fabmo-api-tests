@@ -1,4 +1,6 @@
 # Test is not currently Passing!!
+# Fabmo-engine issue 970
+# https://github.com/FabMo/FabMo-Engine/issues/970
 
 import time
 import threading

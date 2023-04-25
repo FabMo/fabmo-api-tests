@@ -10,9 +10,6 @@ job = Job()
 
 def submit_job(results):
     print("testing submit_job")
-    filename = "test.sbp"
-    name = "testing submitJob"
-    description = "test submit job"
 
     # Clear the job queue, test that it is cleared successfully
     job.clear_queue()
@@ -26,6 +23,10 @@ def submit_job(results):
                     results["code"] = False
                     results["msg"] = "Job queue is NOT clear"
                     return
+
+    filename = "test.sbp"
+    name = "testing submitJob"
+    description = "test submit job"
 
     # Submit the job
     job.submit(filename, name, description)
