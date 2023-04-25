@@ -132,6 +132,36 @@ class Job:
         assert r.status_code == 200
         return r.json()
 
+    def check_if_queue_is_empty(self):
+        r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
+        assert r.status_code == 200
+        queue = r.json()
+        if queue and 'data' in queue:
+            if 'jobs' in queue['data']:
+                if 'pending' in queue['data']['jobs']:
+                    if queue['data']['jobs']['pending'] == []:
+                        return True
+                    else:
+                        return False
+        else:
+            print("Check if queue is empty failed")
+            return False
+
+    def check_if_queue_is_not_empty(self):
+        r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
+        assert r.status_code == 200
+        queue = r.json()
+        if queue and 'data' in queue:
+            if 'jobs' in queue['data']:
+                if 'pending' in queue['data']['jobs']:
+                    if queue['data']['jobs']['pending'] is not []:
+                        return True
+                    else:
+                        return False
+        else:
+            print("Check if queue is NOT empty failed")
+            return False
+
     # TODO def get_job_history(start, count)
 
     # TODO def update_order()

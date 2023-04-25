@@ -1,6 +1,5 @@
 import time
 import threading
-import json
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
@@ -11,18 +10,18 @@ job = Job()
 
 def clear_job_queue(results):
     print("testing clear_job_queue")
-    print("First check that the queue is already clear")
-    queue = job.get_queue()
-    if queue and 'data' in queue:
-        if 'jobs' in queue['data']:
-            if 'pending' in queue['data']['jobs']:
-                if queue['data']['jobs']['pending'] == []:
-                    print("Job queue is clear")
-                else:
-                    results["code"] = False
-                    results["msg"] = "Job queue is NOT clear"
-                    return
-    json_object = json.dumps(queue, indent = 4)
+    job.clear_queue()
+
+    print("Check that the queue is cleared")
+    success = job.check_if_queue_is_empty()
+    if success:
+        print("Job queue is clear")
+    else:
+        results["code"] = False
+        results["msg"] = "Job queue is NOT clear"
+        return
+
+    json_object = job.get_queue()
     print(json_object)
 
     print("submit a job to the queue so that it can be cleared")
@@ -33,34 +32,29 @@ def clear_job_queue(results):
     # Submit the job
     job.submit(filename, name, description)
 
-    # Check that the submitted job is in the queue
-    queue = job.get_queue()
-    if queue and 'data' in queue:
-        if 'jobs' in queue['data']:
-            if 'pending' in queue['data']['jobs']:
-                if queue['data']['jobs']['pending'] == []:
-                    results["code"] = False
-                    results["msg"] = "Job not submmited successfully"
-                    return
-                else:
-                    print("Job submitted successfully")
-    json_object = json.dumps(queue, indent = 4)
+    print("Check that the submitted job is in the queue")
+    success = job.check_if_queue_is_not_empty()
+    if success:
+        print("There are jobs in the queue")
+    else:
+        results["code"] = False
+        results["msg"] = "Job queue clear and it should not be"
+        return
+    json_object = job.get_queue()
     print(json_object)
 
+    # Clean up for future tests by clearing the queue once more
     job.clear_queue()
+    print("Check that the queue is cleared")
+    success = job.check_if_queue_is_empty()
+    if success:
+        print("Job queue is clear")
+    else:
+        results["code"] = False
+        results["msg"] = "Job queue is NOT clear"
+        return
 
-    print("Check if job queue was cleared successfully")
-    queue = job.get_queue()
-    if queue and 'data' in queue:
-        if 'jobs' in queue['data']:
-            if 'pending' in queue['data']['jobs']:
-                if queue['data']['jobs']['pending'] == []:
-                    print("Job queue is clear")
-                else:
-                    results["code"] = False
-                    results["msg"] = "Job queue is NOT clear"
-                    return
-    json_object = json.dumps(queue, indent = 4)
+    json_object = job.get_queue()
     print(json_object)
 
     # Did test pass?
