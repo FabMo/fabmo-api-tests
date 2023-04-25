@@ -17,7 +17,6 @@ def delete_app(results):
 
     # Did test pass?
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -28,7 +27,7 @@ def thread_for_mm(args):
 def test_delete_app():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=delete_app, args=(results,))
 
     # test sequence
@@ -38,8 +37,6 @@ def test_delete_app():
     testThread.join() #waiting for the test to return
 
     #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":

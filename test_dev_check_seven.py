@@ -3,10 +3,12 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
+from util import Util
 
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
+util = Util()
 
 def dev_check_seven(results):
     print("Testing dev_check_seven file with macro 9")
@@ -22,28 +24,18 @@ def dev_check_seven(results):
     job.run_next_job_in_queue()
 
     print("waiting for running")
-    success = mm.wait_for_state("running", 10)
-    if success:
-        print("now running")
-    else:
-        print("timed out while waiting for running")
-        results["code"] = False
-        results["msg"] = "timed out while waiting for running"
+    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    if check is False:
         return
 
     print("waiting for idle")
-    success = mm.wait_for_state("idle", 600)
-    if success:
-        print("now idle")
-    else:
-        print("timed out while waiting for idle")
-        results["code"] = False
-        results["msg"] = "timed out while waiting for idle"
+    print("waiting for idle")
+    check = util.test_dialog(mm.wait_for_state("idle", 600), "now idle", "timed out while waiting for idle")
+    if check is False:
         return
 
     # Did tests pass?
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -54,7 +46,7 @@ def thread_for_mm(args):
 def test_dev_check_seven():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=dev_check_seven, args=(results,))
 
     # test sequence
@@ -64,8 +56,6 @@ def test_dev_check_seven():
     testThread.join() #waiting for the test to return
 
     #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":

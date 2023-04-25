@@ -12,6 +12,7 @@ def submit_job(results):
     print("testing submit_job")
 
     # Clear the job queue, test that it is cleared successfully
+    # TODO use check if queue is clear function in job class
     job.clear_queue()
     queue = job.get_queue()
     if queue and 'data' in queue:
@@ -21,7 +22,6 @@ def submit_job(results):
                     print("Job queue is clear")
                 else:
                     results["code"] = False
-                    results["msg"] = "Job queue is NOT clear"
                     return
 
     filename = "test.sbp"
@@ -38,7 +38,6 @@ def submit_job(results):
             if 'pending' in queue['data']['jobs']:
                 if queue['data']['jobs']['pending'] == []:
                     results["code"] = False
-                    results["msg"] = "Job not submmited successfully"
                     return
                 else:
                     print("Job submitted successfully")
@@ -47,7 +46,6 @@ def submit_job(results):
 
     # Did test pass?
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -58,7 +56,7 @@ def thread_for_mm(args):
 def test_submit_job():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=submit_job, args=(results,))
 
     # test sequence
@@ -68,8 +66,6 @@ def test_submit_job():
     testThread.join() #waiting for the test to return
 
     #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":

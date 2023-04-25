@@ -7,11 +7,13 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 from macro import Macro
+from util import Util
 
 mm = MessageMonitor()
 mm.clear_all_state()
 
 macro = Macro()
+util = Util()
 
 def run_macro_two_hundred_one(results):
     print("Test macro 201")
@@ -19,27 +21,16 @@ def run_macro_two_hundred_one(results):
     macro.run_macro(macro_number)
 
     # Wait for running state
-    print("waiting for running")
-    success = mm.wait_for_state("running", 5)
-    if success:
-        print("macro 201 is running")
-    else:
-        results["code"] = False
-        results["msg"] = "timed out while waiting for running"
+    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    if check is False:
         return
 
     # Wait for idle at end of file, signaling that the file completed
-    print("waiting for idle, end of macro 201")
-    success = mm.wait_for_state("idle", 5)
-    if success:
-        print("macro 201 completed successfully")
-    else:
-        results["code"] = False
-        results["msg"] = "timed out while waiting for idle"
+    check = util.test_dialog(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
+    if check is False:
         return
 
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -49,7 +40,7 @@ def thread_for_mm(args):
 def test_run_macro_two_hundred_one():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=run_macro_two_hundred_one, args=(results,))
 
     # test sequence

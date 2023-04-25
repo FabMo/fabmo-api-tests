@@ -17,7 +17,6 @@ def submit_app(results):
 
     # Did test pass?
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -28,7 +27,7 @@ def thread_for_mm(args):
 def test_submit_app():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=submit_app, args=(results,))
 
     # test sequence

@@ -163,8 +163,8 @@ connected = False
 async def onStatus(status):
     msg = FabmoStatus(status)
     #DEBUG
-    msg.printMe()
-    print("\n\n\n\n")
+    # msg.printMe()
+    # print("\n\n\n\n")
     #DEBUG
     state = msg.get_key("state")
     out1 = msg.get_key("out1")

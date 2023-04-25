@@ -3,11 +3,13 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
+from util import Util
 
 mm = MessageMonitor()
 mm.clear_all_state()
 
 job = Job()
+util = Util()
 
 def dev_check_five(results):
     print("Testing dev_check_five subs and loops")
@@ -23,17 +25,13 @@ def dev_check_five(results):
     job.run_next_job_in_queue()
 
     print("waiting for running")
-    success = mm.wait_for_state("running", 5)
-    if success:
-        print("now running")
-    else:
-        results["code"] = False
-        results["msg"] = "timed out while waiting for running"
+    check = util.test_dialog(mm.wait_for_state("runnng", 5), "now running", "timed out while waiting for running")
+    if check is False:
         return
 
-    # Wait for 5 minutes, then quit
+    # Wait for a bit, then quit
     # TODO should add various pause and resumes test cases
-    time.sleep(300)
+    time.sleep(10)
     job.pause()
     time.sleep(2)
     job.quit()
@@ -41,17 +39,12 @@ def dev_check_five(results):
     # Make sure we are in an expected state
     # If something went wrong, we will probably not be idle
     print("waiting for idle")
-    success = mm.wait_for_state("idle", 10)
-    if success:
-        print("now idle")
-    else:
-        results["code"] = False
-        results["msg"] = "timed out while waiting for idle"
+    check = util.test_dialog(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
+    if check is False:
         return
 
     # Did tests pass?
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -62,7 +55,7 @@ def thread_for_mm(args):
 def test_dev_check_five():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=dev_check_five, args=(results,))
 
     # test sequence
@@ -71,9 +64,7 @@ def test_dev_check_five():
     testThread.start()
     testThread.join() #waiting for the test to return
 
-    #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
+    #reporting result
     assert results["code"] is True
 
 if __name__ == "__main__":

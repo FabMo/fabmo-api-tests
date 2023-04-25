@@ -36,7 +36,6 @@ def dev_check_two(results):
         print("Error message reached")
     else:
         results["code"] = False
-        results["msg"] = "timed out while waiting for error message"
         return
 
     # print("waiting for idle")
@@ -45,12 +44,10 @@ def dev_check_two(results):
     #     print("now idle")
     # else:
     #     results["code"] = False
-    #     results["msg"] = "timed out while waiting for idle"
     #     return
 
     # Did tests pass?
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -61,7 +58,7 @@ def thread_for_mm(args):
 def test_dev_check_two():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=dev_check_two, args=(results,))
 
     # test sequence
@@ -71,8 +68,6 @@ def test_dev_check_two():
     testThread.join() #waiting for the test to return
 
     #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":

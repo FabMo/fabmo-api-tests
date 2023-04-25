@@ -3,55 +3,42 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
+from util import Util
 
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
+util = Util()
 
 def clear_job_queue(results):
     print("testing clear_job_queue")
     job.clear_queue()
 
     print("Check that the queue is cleared")
-    success = job.check_if_queue_is_empty()
-    if success:
-        print("Job queue is clear")
-    else:
-        results["code"] = False
-        results["msg"] = "Job queue is NOT clear"
+    check = util.test_dialog(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is NOT clear")
+    if check is False:
         return
 
     json_object = job.get_queue()
     print(json_object)
 
     print("submit a job to the queue so that it can be cleared")
-    filename = "test.sbp"
-    name = "testing submitJob"
-    description = "test submit job"
-
     # Submit the job
-    job.submit(filename, name, description)
+    job.submit()
 
     print("Check that the submitted job is in the queue")
-    success = job.check_if_queue_is_not_empty()
-    if success:
-        print("There are jobs in the queue")
-    else:
-        results["code"] = False
-        results["msg"] = "Job queue clear and it should not be"
+    check = util.test_dialog(job.check_if_queue_is_not_empty(), "There are jobs in the queue", "Job queue clear and it should not be")
+    if check is False:
         return
+
     json_object = job.get_queue()
     print(json_object)
 
     # Clean up for future tests by clearing the queue once more
     job.clear_queue()
     print("Check that the queue is cleared")
-    success = job.check_if_queue_is_empty()
-    if success:
-        print("Job queue is clear")
-    else:
-        results["code"] = False
-        results["msg"] = "Job queue is NOT clear"
+    check = util.test_dialog(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is NOT clear")
+    if check is False:
         return
 
     json_object = job.get_queue()
@@ -59,7 +46,6 @@ def clear_job_queue(results):
 
     # Did test pass?
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -70,7 +56,7 @@ def thread_for_mm(args):
 def test_clear_job_queue():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=clear_job_queue, args=(results,))
 
     # test sequence
@@ -80,8 +66,6 @@ def test_clear_job_queue():
     testThread.join() #waiting for the test to return
 
     #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":

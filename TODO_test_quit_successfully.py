@@ -8,11 +8,13 @@ from config import config
 from message_monitor import MessageMonitor
 from job import Job
 from macro import Macro
+from util import Util
 
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
 macro = Macro()
+util = Util()
 
 def quit_successfully(results):
     print("Test quit successfully")
@@ -21,13 +23,8 @@ def quit_successfully(results):
 
     # Wait for running state
     print("waiting for running")
-    time.sleep(1)
-    success = mm.wait_for_state("running", 10)
-    if success:
-        print("macro 211 is running")
-    else:
-        results["code"] = False
-        results["msg"] = "timed out while waiting for running"
+    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    if check is False:
         return
 
     # Wait for a short time, error usually occurs when quitting shortly
@@ -40,17 +37,11 @@ def quit_successfully(results):
 
     # Wait for running after sending quit. Job should not run at all.
     print("waiting for running signaling a failed quit")
-    time.sleep(1)
-    failure = mm.wait_for_state("running", 10)
-    if failure:
-        results["code"] = False
-        results["msg"] = "Job did not quit successfully"
+    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    if check is False:
         return
-    else:
-        print("Quit job successfully")
 
     results["code"] = True
-    results["msg"] = "success"
     return
 
 def thread_for_mm(args):
@@ -60,7 +51,7 @@ def thread_for_mm(args):
 def test_quit_successfully():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
-    results = {"code":False, "msg":""}
+    results = {"code":False}
     testThread = threading.Thread(target=quit_successfully, args=(results,))
 
     # test sequence
@@ -70,8 +61,6 @@ def test_quit_successfully():
     testThread.join() #waiting for the test to return
 
     #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":
