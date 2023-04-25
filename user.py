@@ -10,8 +10,14 @@ class User:
         assert r.status_code == 200
         return r.json()
 
-    # TODO def add_user(self):
-        #r = requests.post(f'{config.API_URL}/authentication/user', user_info=, timeout = config.TIMEOUT)
+    def get_users(self):
+        r = requests.get(f'{config.API_URL}/authentication/users', timeout = config.TIMEOUT)
+        assert r.status_code == 200
+        return r.json()
+
+    # def add_user(self, new_user):
+    #     r = requests.post(f'{config.API_URL}/authentication/user', data=new_user, timeout = config.TIMEOUT)
+    #     print(r.text)
 
     # TODO def modify_user(self):
         #r = requests.post(f'{config.API_URL}/authentication/user', user_info=, timeout = config.TIMEOUT)
