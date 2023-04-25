@@ -4,6 +4,7 @@ import io
 import codecs
 import mimetypes
 import sys
+import json
 import requests
 from config import config
 from message_monitor import MessageMonitor
@@ -103,6 +104,9 @@ class Job:
         # Second request
         r = requests.post(f'{config.API_URL}/job', data=body, headers=headers, timeout=config.TIMEOUT)
 
+    def submit_by_id(self, job_id):
+        r = requests.post(f'{config.API_URL}/job/{job_id}', timeout=config.TIMEOUT)
+
     def clear_queue(self):
         r = requests.delete(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
 
@@ -154,13 +158,27 @@ class Job:
         if queue and 'data' in queue:
             if 'jobs' in queue['data']:
                 if 'pending' in queue['data']['jobs']:
-                    if queue['data']['jobs']['pending'] is not []:
+                    if queue['data']['jobs']['pending'] != []:
                         return True
                     else:
                         return False
         else:
             print("Check if queue is NOT empty failed")
             return False
+
+    # queue_index argument is its position in the job queue, i.e the first job is 0, second is 1, etc
+    # desired_key argument is the key that you wish to retrieve the corresponding value from
+    def get_value_from_queue(self, queue_index, desired_key):
+        r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
+        assert r.status_code == 200
+        data = r.text
+        queue = json.loads(data)
+        # I tried using file_id instead of _id here but it did not seem to work correctly
+        id_value = queue['data']['jobs']['pending'][queue_index][desired_key]
+        if id_value is not None:
+            return id_value
+        return False
+
 
     # TODO def get_job_history(start, count)
 
