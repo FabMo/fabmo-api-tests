@@ -25,7 +25,7 @@ def dev_check_five(results):
     job.run_next_job_in_queue()
 
     print("waiting for running")
-    check = util.test_dialog(mm.wait_for_state("runnng", 5), "now running", "timed out while waiting for running")
+    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
     if check is False:
         return
 

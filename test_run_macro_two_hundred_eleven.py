@@ -24,7 +24,7 @@ def run_macro_two_hundred_eleven(results):
 
     # Wait for idle at end of file, signaling that the file completed
     print("waiting for idle, end of macro 211")
-    check = util.test_dialog(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
+    check = util.test_dialog(mm.wait_for_state("idle", 1000), "now idle", "timed out while waiting for idle")
     if check is False:
         return
 

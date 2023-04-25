@@ -29,7 +29,6 @@ def dev_check_seven(results):
         return
 
     print("waiting for idle")
-    print("waiting for idle")
     check = util.test_dialog(mm.wait_for_state("idle", 600), "now idle", "timed out while waiting for idle")
     if check is False:
         return
