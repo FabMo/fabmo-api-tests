@@ -97,12 +97,21 @@ class App:
         r = requests.delete(f'{config.API_URL}/apps/{app_to_delete}', timeout=config.TIMEOUT)
         print(r.text)
 
-    def getApps(self):
+    def get_apps(self):
         r = requests.get(f'{config.API_URL}/apps', timeout = config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
 
-    def getAppConfig(self, app_id):
+    def check_for_app(self, id_of_app):
+        r = requests.get(f'{config.API_URL}/apps', timeout = config.TIMEOUT)
+        assert r.status_code == 200
+        app_list = r.json()
+        for i in app_list['data']['apps']:
+            if i['id'] == id_of_app:
+                return True
+        return False
+
+    def get_app_config(self, app_id):
         r = requests.get(f'{config.API_URL}/apps/{app_id}/config', timeout = config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
