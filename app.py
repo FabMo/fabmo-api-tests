@@ -84,12 +84,9 @@ class App:
         # Setup for second request
         # Extract key from first response json
         json_data = r.json()
-        if json_data and 'data' in json_data:
-            if 'key' in json_data['data']:
-                for k in json_data['data']['key']:
-                    key += k
+        response_key = json_data['data']['key']
 
-        content_type, body = MultipartFormdataEncoder().encode([('key', key), ('index',0)], [('file', app_to_submit, io.BytesIO(codes))])
+        content_type, body = MultipartFormdataEncoder().encode([('key', response_key), ('index',0)], [('file', app_to_submit, io.BytesIO(codes))])
         headers = {"Content-type": content_type, "Accept":"text/plain"}
 
         # Second request

@@ -4,7 +4,6 @@ import io
 import codecs
 import mimetypes
 import sys
-import json
 import requests
 from config import config
 from message_monitor import MessageMonitor
@@ -93,12 +92,9 @@ class Job:
         # Setup for second request
         # Extract key from first response json
         json_data = r.json()
-        if json_data and 'data' in json_data:
-            if 'key' in json_data['data']:
-                for k in json_data['data']['key']:
-                    key += k
+        response_key = json_data['data']['key']
 
-        content_type, body = MultipartFormdataEncoder().encode([('key', key), ('index',0)], [('file', filename, io.BytesIO(codes.encode('utf-8')))])
+        content_type, body = MultipartFormdataEncoder().encode([('key', response_key), ('index',0)], [('file', filename, io.BytesIO(codes.encode('utf-8')))])
         headers = {"Content-type": content_type, "Accept":"text/plain"}
 
         # Second request
@@ -140,30 +136,20 @@ class Job:
         r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
         assert r.status_code == 200
         queue = r.json()
-        if queue and 'data' in queue:
-            if 'jobs' in queue['data']:
-                if 'pending' in queue['data']['jobs']:
-                    if queue['data']['jobs']['pending'] == []:
-                        return True
-                    else:
-                        return False
+        jobs_pending = queue['data']['jobs']['pending']
+        if jobs_pending == []:
+            return True
         else:
-            print("Check if queue is empty failed")
             return False
 
     def check_if_queue_is_not_empty(self):
         r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
         assert r.status_code == 200
         queue = r.json()
-        if queue and 'data' in queue:
-            if 'jobs' in queue['data']:
-                if 'pending' in queue['data']['jobs']:
-                    if queue['data']['jobs']['pending'] != []:
-                        return True
-                    else:
-                        return False
+        jobs_pending = queue['data']['jobs']['pending']
+        if jobs_pending != []:
+            return True
         else:
-            print("Check if queue is NOT empty failed")
             return False
 
     # queue_index argument is its position in the job queue, i.e the first job is 0, second is 1, etc
@@ -171,8 +157,7 @@ class Job:
     def get_value_from_queue(self, queue_index, desired_key):
         r = requests.get(f'{config.API_URL}/jobs/queue', timeout=config.TIMEOUT)
         assert r.status_code == 200
-        data = r.text
-        queue = json.loads(data)
+        queue = r.json()
         # I tried using file_id instead of _id here but it did not seem to work correctly
         id_value = queue['data']['jobs']['pending'][queue_index][desired_key]
         if id_value is not None:
