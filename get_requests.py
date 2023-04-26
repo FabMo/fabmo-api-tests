@@ -5,22 +5,22 @@ class Get_Requests:
     def __init__(self):
         self.initialized = 1
 
-    def get_config(self):
+    def config(self):
         r = requests.get(f'{config.API_URL}/config', timeout = config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
 
-    def get_status(self):
+    def status(self):
         r = requests.get(f'{config.API_URL}/status/', timeout = config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
 
-    def get_version(self):
+    def version(self):
         r = requests.get(f'{config.API_URL}/version/', timeout = config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
 
-    def get_info(self):
+    def info(self):
         r = requests.get(f'{config.API_URL}/info/', timeout = config.TIMEOUT)
         assert r.status_code == 200
         return r.json()

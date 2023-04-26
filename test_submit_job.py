@@ -3,26 +3,21 @@ import threading
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
+from util import Util
 
 mm = MessageMonitor()
 mm.clear_all_state()
 job = Job()
+util = Util()
 
 def submit_job(results):
     print("testing submit_job")
 
     # Clear the job queue, test that it is cleared successfully
-    # TODO use check if queue is clear function in job class
     job.clear_queue()
-    queue = job.get_queue()
-    if queue and 'data' in queue:
-        if 'jobs' in queue['data']:
-            if 'pending' in queue['data']['jobs']:
-                if queue['data']['jobs']['pending'] == []:
-                    print("Job queue is clear")
-                else:
-                    results["code"] = False
-                    return
+    check = util.test_dialog(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is not clear, and should be")
+    if check is False:
+        return
 
     filename = "test.sbp"
     name = "testing submitJob"
@@ -32,15 +27,9 @@ def submit_job(results):
     job.submit(filename, name, description)
 
     # Check that the submitted job is in the queue
-    queue = job.get_queue()
-    if queue and 'data' in queue:
-        if 'jobs' in queue['data']:
-            if 'pending' in queue['data']['jobs']:
-                if queue['data']['jobs']['pending'] == []:
-                    results["code"] = False
-                    return
-                else:
-                    print("Job submitted successfully")
+    check = util.test_dialog(job.check_if_queue_is_not_empty(), "Job submitted successfully", "Job NOT submitted successfully")
+    if check is False:
+        return
 
     job.clear_queue()
 

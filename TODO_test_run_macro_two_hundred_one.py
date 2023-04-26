@@ -1,32 +1,38 @@
-#TODO, this test runs to fast to test it by observing the fabmo state
-# A better way to test it may be to edit one of the config system
-# variables that macro 201 sets, then run 201, then observe that the change took place
-
 import time
 import threading
 from config import config
 from message_monitor import MessageMonitor
+from job import Job
 from macro import Macro
 from util import Util
+from get_requests import Get_Requests
 
+job = Job()
 mm = MessageMonitor()
 mm.clear_all_state()
-
 macro = Macro()
 util = Util()
+get = Get_Requests()
 
+# This job runs too quickly to observe state changes
 def run_macro_two_hundred_one(results):
     print("Test macro 201")
-    macro_number = 201
-    macro.run_macro(macro_number)
-
-    # Wait for running state
-    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    print("First run a modified macro 201 and check that it changes a variable ($sb_homeOff_X to 1)")
+    filename = "macro_201_modified.sbp"
+    job.submit(filename)
+    job.run_next_job_in_queue()
+    time.sleep(3)
+    print("Check the config to see that the value has changed")
+    check_config = get.config()
+    check = util.test_dialog(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 1, "The config has been changed", "The config appears unchanged")
     if check is False:
         return
 
-    # Wait for idle at end of file, signaling that the file completed
-    check = util.test_dialog(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
+    print("Now run the original macro 201 which will change the value back to its proper value, 0.5")
+    macro_number = 201
+    macro.run_macro(macro_number)
+    time.sleep(3)
+    check = util.test_dialog(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 1, "The config has been changed back", "The config has not been changed back")
     if check is False:
         return
 
@@ -50,8 +56,6 @@ def test_run_macro_two_hundred_one():
     testThread.join() #waiting for the test to return
 
     #reporting results
-    # debug (i'm sure there is pytest way to turn this on and off)
-    print(results)
     assert results["code"] is True
 
 if __name__ == "__main__":
