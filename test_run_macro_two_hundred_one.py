@@ -21,20 +21,31 @@ def run_macro_two_hundred_one(results):
     filename = "macro_201_modified.sbp"
     job.submit(filename)
     job.run_next_job_in_queue()
-    time.sleep(3)
-    print("Check the config to see that the value has changed")
+
+    time.sleep(2)
+
+    print("Check the config to see that the value has changed to 1")
     check_config = get.config()
     check = util.test_dialog(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 1, "The config has been changed", "The config appears unchanged")
     if check is False:
+        print(f"Value is not correct {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
         return
+    print(f"changed to {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
+
+    time.sleep(2)
 
     print("Now run the original macro 201 which will change the value back to its proper value, 0.5")
     macro_number = 201
     macro.run_macro(macro_number)
-    time.sleep(3)
-    check = util.test_dialog(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 1, "The config has been changed back", "The config has not been changed back")
+
+    time.sleep(2)
+
+    check_config = get.config()
+    check = util.test_dialog(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 0.5, "The config has been changed back", "The config has not been changed back")
     if check is False:
+        print(f"Value is not correct {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
         return
+    print(f"changed to {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
 
     results["code"] = True
     return
