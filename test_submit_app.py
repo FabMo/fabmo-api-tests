@@ -1,3 +1,4 @@
+# This test is identical to test_delete_app, keeping both for coverage
 import time
 import threading
 from config import config
