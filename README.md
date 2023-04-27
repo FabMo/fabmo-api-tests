@@ -26,3 +26,8 @@ To run all tests and see the output,
  > pytest -s
 
 This is intended to be ran on the ShopBot Desktop profile
+
+I chose to use selenium for automated UI interaction. Google-chrome and chromedriver need to be 
+installed and their paths entered into the proper locations. Right now only test_dev_check_two.py.
+Tests must be ran directly, not through ssh. Also currently cannot run as root when using selenium,
+which I think might be a good thing.

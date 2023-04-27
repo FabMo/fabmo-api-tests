@@ -4,6 +4,9 @@
 
 import time
 import threading
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from config import config
 from message_monitor import MessageMonitor
 from job import Job
@@ -14,6 +17,26 @@ job = Job()
 
 def dev_check_two(results):
     print("Testing dev_check_two error reporting")
+
+    DRIVER_LOCATION = "/usr/bin/chromedriver"
+    BINARY_LOCATION = "/usr/bin/google-chrome"
+
+    # start selenium
+    options = webdriver.ChromeOptions()
+    options.add_argument('--no-sandbox')
+    options.binary_location = BINARY_LOCATION
+    service = Service(executable_path = DRIVER_LOCATION)
+    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.get(config.API_URL)
+    username_box = driver.find_element(By.NAME, "username")
+    username_box.send_keys("admin")
+    password_box = driver.find_element(By.NAME, "password")
+    password_box.send_keys("go2fabmo")
+    time.sleep(3)
+    login_button = driver.find_element(By.CLASS_NAME, "button")
+    login_button.click()
+    time.sleep(3)
 
     filename = "dev_check_two_error_reporting.sbp"
     name = "testing dev check two"
@@ -38,16 +61,16 @@ def dev_check_two(results):
         results["code"] = False
         return
 
-    # print("waiting for idle")
-    # success = mm.wait_for_state("idle", 10)
-    # if success:
-    #     print("now idle")
-    # else:
-    #     results["code"] = False
-    #     return
+    button = driver.find_element(By.CLASS_NAME, "modalCancel")
+    button.click()
+
+    time.sleep(2)
 
     # Did tests pass?
     results["code"] = True
+    # # close browser and quit driver
+    driver.close()
+    driver.quit()
     return
 
 def thread_for_mm(args):

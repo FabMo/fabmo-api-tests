@@ -3,3 +3,5 @@ python-socketio
 python-dotenv
 aiohttp
 requests
+selenium==4.8.2
+webdriver_manager
