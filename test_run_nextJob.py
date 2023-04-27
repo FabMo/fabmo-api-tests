@@ -21,19 +21,19 @@ def run_next_job(results):
     job.run_next_job_in_queue()
 
     print("waiting for running")
-    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    check = util.test_check(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
     if check is False:
         return
 
     print("wait for message at the end of the file, indicating completion")
-    check = util.test_dialog(mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600), "DONE with ShopBot Logo", "timed out while waiting for ShopBot Logo to complete")
+    check = util.test_check(mm.wait_for_message("DONE with ShopBot Logo ... any key to continue", 600), "DONE with ShopBot Logo", "timed out while waiting for ShopBot Logo to complete")
     if check is False:
         return
 
     job.resume()
 
     print("waiting for idle")
-    check = util.test_dialog(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
+    check = util.test_check(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
     if check is False:
         return
 

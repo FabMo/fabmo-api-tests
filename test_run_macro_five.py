@@ -18,13 +18,13 @@ def run_macro_five(results):
     macro.run_macro(macro_number)
 
     print("Waiting for output 1, spindle on")
-    check = util.test_dialog(mm.wait_for_output(1, 4), "output 1 is on", "timed out while waiting for output")
+    check = util.test_check(mm.wait_for_output(1, 4), "output 1 is on", "timed out while waiting for output")
     if check is False:
         return
 
     # Wait for idle at end of file, signaling that the file completed
     print("waiting for idle, end of macro 5")
-    check = util.test_dialog(mm.wait_for_state("idle", 150), "now idle", "timed out while waiting for idle")
+    check = util.test_check(mm.wait_for_state("idle", 150), "now idle", "timed out while waiting for idle")
     if check is False:
         return
 

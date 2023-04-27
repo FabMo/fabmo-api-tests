@@ -26,7 +26,7 @@ def run_macro_two_hundred_one(results):
 
     print("Check the config to see that the value has changed to 1")
     check_config = get.config()
-    check = util.test_dialog(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 1, "The config has been changed", "The config appears unchanged")
+    check = util.test_check(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 1, "The config has been changed", "The config appears unchanged")
     if check is False:
         print(f"Value is not correct {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
         return
@@ -41,7 +41,7 @@ def run_macro_two_hundred_one(results):
     time.sleep(2)
 
     check_config = get.config()
-    check = util.test_dialog(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 0.5, "The config has been changed back", "The config has not been changed back")
+    check = util.test_check(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 0.5, "The config has been changed back", "The config has not been changed back")
     if check is False:
         print(f"Value is not correct {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
         return

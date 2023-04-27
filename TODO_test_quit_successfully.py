@@ -23,7 +23,7 @@ def quit_successfully(results):
 
     # Wait for running state
     print("waiting for running")
-    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    check = util.test_check(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
     if check is False:
         return
 
@@ -37,7 +37,7 @@ def quit_successfully(results):
 
     # Wait for running after sending quit. Job should not run at all.
     print("waiting for running signaling a failed quit")
-    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    check = util.test_check(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
     if check is False:
         return
 

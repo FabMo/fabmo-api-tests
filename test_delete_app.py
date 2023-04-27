@@ -16,7 +16,7 @@ def delete_app(results):
     print("If app is already in the list delete it")
     app_to_delete = "fabmo-dev-tests-app.fma"
     # If this check is false we will move on with submitting the app, if it returns true we will delete the app, then move on
-    check = util.test_dialog(app.check_for_app('fabmo-dev-tests-app'), "The app exists in the list", "The app does not exist in the list")
+    check = util.test_check(app.check_for_app('fabmo-dev-tests-app'), "The app exists in the list", "The app does not exist in the list")
     if check is True:
         print("App is already in the list, delete it")
         app.delete('fabmo-dev-tests-app')
@@ -25,14 +25,14 @@ def delete_app(results):
     print("App is not in the list, submit it")
     app.submit(app_to_delete)
     time.sleep(3)
-    check = util.test_dialog(app.check_for_app('fabmo-dev-tests-app'), "The app exists in the list", "The app does not exist in the list")
+    check = util.test_check(app.check_for_app('fabmo-dev-tests-app'), "The app exists in the list", "The app does not exist in the list")
     if check is False:
         return
 
     print("Delete the app for cleanup purposes, and additional test case")
     app.delete('fabmo-dev-tests-app')
     time.sleep(3)
-    check = util.test_dialog(app.check_for_app('fabmo-dev-tests-app'), "The app exists in the list", "The app has been cleared for cleanup")
+    check = util.test_check(app.check_for_app('fabmo-dev-tests-app'), "The app exists in the list", "The app has been cleared for cleanup")
     if check is True:
         print("App still in the list after deleting it")
         return

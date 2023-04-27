@@ -15,7 +15,7 @@ def clear_job_queue(results):
     job.clear_queue()
 
     print("Check that the queue is cleared")
-    check = util.test_dialog(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is NOT clear")
+    check = util.test_check(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is NOT clear")
     if check is False:
         return
 
@@ -27,7 +27,7 @@ def clear_job_queue(results):
     job.submit()
 
     print("Check that the submitted job is in the queue")
-    check = util.test_dialog(job.check_if_queue_is_not_empty(), "There are jobs in the queue", "Job queue clear and it should not be")
+    check = util.test_check(job.check_if_queue_is_not_empty(), "There are jobs in the queue", "Job queue clear and it should not be")
     if check is False:
         return
 
@@ -37,7 +37,7 @@ def clear_job_queue(results):
     # Clean up for future tests by clearing the queue once more
     job.clear_queue()
     print("Check that the queue is cleared")
-    check = util.test_dialog(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is NOT clear")
+    check = util.test_check(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is NOT clear")
     if check is False:
         return
 

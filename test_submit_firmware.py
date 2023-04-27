@@ -18,9 +18,9 @@ def submit_firmware(results):
 
     # Submit the firmware
     firmware.submit(firmware_to_submit)
-    time.sleep(60)
+    time.sleep(120)
     get_firmware_version = get.info()
-    check = util.test_dialog(get_firmware_version['data']['info']['firmware']['version'] == '101.57.44', "Firmware version matches what was submitted", "Firmware version is incorrect")
+    check = util.test_check(get_firmware_version['data']['info']['firmware']['version'] == '101.57.44', "Firmware version matches what was submitted", "Firmware version is incorrect")
     if check is False:
         return
 
@@ -29,9 +29,9 @@ def submit_firmware(results):
 
     # Submit the firmware
     firmware.submit(firmware_to_submit)
-    time.sleep(60)
+    time.sleep(120)
     get_firmware_version = get.info()
-    check = util.test_dialog(get_firmware_version['data']['info']['firmware']['version'] == '101.57.45-dirty', "Firmware version matches what was submitted", "Firmware version is incorrect")
+    check = util.test_check(get_firmware_version['data']['info']['firmware']['version'] == '101.57.45-dirty', "Firmware version matches what was submitted", "Firmware version is incorrect")
     if check is False:
         return
 

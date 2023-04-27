@@ -15,7 +15,7 @@ def submit_job(results):
 
     # Clear the job queue, test that it is cleared successfully
     job.clear_queue()
-    check = util.test_dialog(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is not clear, and should be")
+    check = util.test_check(job.check_if_queue_is_empty(), "Job queue is clear", "Job queue is not clear, and should be")
     if check is False:
         return
 
@@ -27,7 +27,7 @@ def submit_job(results):
     job.submit(filename, name, description)
 
     # Check that the submitted job is in the queue
-    check = util.test_dialog(job.check_if_queue_is_not_empty(), "Job submitted successfully", "Job NOT submitted successfully")
+    check = util.test_check(job.check_if_queue_is_not_empty(), "Job submitted successfully", "Job NOT submitted successfully")
     if check is False:
         return
 

@@ -25,7 +25,7 @@ def dev_check_five(results):
     job.run_next_job_in_queue()
 
     print("waiting for running")
-    check = util.test_dialog(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
+    check = util.test_check(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
     if check is False:
         return
 
@@ -39,7 +39,7 @@ def dev_check_five(results):
     # Make sure we are in an expected state
     # If something went wrong, we will probably not be idle
     print("waiting for idle")
-    check = util.test_dialog(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
+    check = util.test_check(mm.wait_for_state("idle", 10), "now idle", "timed out while waiting for idle")
     if check is False:
         return
 
