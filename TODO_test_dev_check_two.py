@@ -21,7 +21,7 @@ def dev_check_two(results):
     print("Testing dev_check_two error reporting")
 
     DRIVER_LOCATION = "/usr/bin/chromedriver"
-    BINARY_LOCATION = "/usr/bin/chromium-browser"
+    BINARY_LOCATION = "/usr/bin/google-chrome"
 
     # start selenium
     options = webdriver.ChromeOptions()
