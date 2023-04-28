@@ -1,15 +1,20 @@
 import requests
 from config import config
-
-class Get_Requests:
+class Fabmo_Info:
     def __init__(self):
         self.initialized = 1
 
     # Encompasses fabmo configuration, sbp variables, settings sent to g2, profiles, etc
-    def config(self):
+    def get_config(self):
         r = requests.get(f'{config.API_URL}/config', timeout = config.TIMEOUT)
         assert r.status_code == 200
         return r.json()
+
+    # TODO not implemented yet
+    # def set_config(self):
+    #     r = requests.post(f'{config.API_URL}/config', data = , timeout = config.TIMEOUT)
+    #     assert r.status_code == 200
+    #     return r.json()
 
     # Provides fabmo 'status', the same status that message monitor is monitoring
     def status(self):
@@ -29,5 +34,9 @@ class Get_Requests:
         assert r.status_code == 200
         return r.json()
 
+    # TODO
+    # def request_status():
+    #   emit('status')
+
 if __name__ == '__main__':
-    get_requests = Get_Requests()
+    fabmo_info = Fabmo_Info()

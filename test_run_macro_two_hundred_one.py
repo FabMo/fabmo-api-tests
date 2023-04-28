@@ -5,14 +5,14 @@ from message_monitor import MessageMonitor
 from job import Job
 from macro import Macro
 from util import Util
-from get_requests import Get_Requests
+from fabmo_info import Fabmo_Info
 
 job = Job()
 mm = MessageMonitor()
 mm.clear_all_state()
 macro = Macro()
 util = Util()
-get = Get_Requests()
+fabmo_info = Fabmo_Info()
 
 # This job runs too quickly to observe state changes
 def run_macro_two_hundred_one(results):
@@ -25,7 +25,7 @@ def run_macro_two_hundred_one(results):
     time.sleep(2)
 
     print("Check the config to see that the value has changed to 1")
-    check_config = get.config()
+    check_config = fabmo_info.get_config()
     check = util.test_check(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 1, "The config has been changed", "The config appears unchanged")
     if check is False:
         print(f"Value is not correct {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
@@ -40,7 +40,7 @@ def run_macro_two_hundred_one(results):
 
     time.sleep(2)
 
-    check_config = get.config()
+    check_config = fabmo_info.get_config()
     check = util.test_check(check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X'] == 0.5, "The config has been changed back", "The config has not been changed back")
     if check is False:
         print(f"Value is not correct {check_config['data']['config']['opensbp']['variables']['SB_HOMEOFF_X']}")
@@ -62,7 +62,7 @@ def test_run_macro_two_hundred_one():
 
     # test sequence
     messageMonitorThread.start()
-    time.sleep(1) # time for the MessageMonitor to get up and running
+    time.sleep(1) # time for the MessageMonitor to fabmo_info up and running
     testThread.start()
     testThread.join() #waiting for the test to return
 

@@ -4,13 +4,13 @@ from config import config
 from message_monitor import MessageMonitor
 from util import Util
 from firmware import Firmware
-from get_requests import Get_Requests
+from fabmo_info import Fabmo_Info
 
 mm = MessageMonitor()
 mm.clear_all_state()
 util = Util()
 firmware = Firmware()
-get = Get_Requests()
+fabmo_info = Fabmo_Info()
 
 def submit_firmware(results):
     print("testing submit_firmware")
@@ -18,8 +18,9 @@ def submit_firmware(results):
 
     # Submit the firmware
     firmware.submit(firmware_to_submit)
-    time.sleep(120)
-    get_firmware_version = get.info()
+    # Sometimes this can take awhile
+    time.sleep(200)
+    get_firmware_version = fabmo_info.info()
     check = util.test_check(get_firmware_version['data']['info']['firmware']['version'] == '101.57.44', "Firmware version matches what was submitted", "Firmware version is incorrect")
     if check is False:
         return
@@ -29,8 +30,9 @@ def submit_firmware(results):
 
     # Submit the firmware
     firmware.submit(firmware_to_submit)
-    time.sleep(120)
-    get_firmware_version = get.info()
+    # Sometimes this can take awhile
+    time.sleep(200)
+    get_firmware_version = fabmo_info.info()
     check = util.test_check(get_firmware_version['data']['info']['firmware']['version'] == '101.57.45-dirty', "Firmware version matches what was submitted", "Firmware version is incorrect")
     if check is False:
         return
@@ -52,7 +54,7 @@ def test_submit_firmware():
 
     # test sequence
     messageMonitorThread.start()
-    time.sleep(1) # time for the MessageMonitor to get up and running
+    time.sleep(1) # time for the MessageMonitor to fabmo_info up and running
     testThread.start()
     testThread.join() #waiting for the test to return
 
