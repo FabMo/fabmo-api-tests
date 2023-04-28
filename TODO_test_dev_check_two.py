@@ -1,6 +1,8 @@
-#Test is not currently working!!
-#The error message cannot be resolved by posting
-#A resume, or a quit. Not sure how to proceed.
+# Error message dialog can be resolved with selenium
+# I am having trouble deciding where and how to run selenium
+# Having trouble making it cross platform
+# Google chrome is not a good fit for the raspberry pi but it
+# is the only browser I have been successful with
 
 import time
 import threading
@@ -19,7 +21,7 @@ def dev_check_two(results):
     print("Testing dev_check_two error reporting")
 
     DRIVER_LOCATION = "/usr/bin/chromedriver"
-    BINARY_LOCATION = "/usr/bin/google-chrome"
+    BINARY_LOCATION = "/usr/bin/chromium-browser"
 
     # start selenium
     options = webdriver.ChromeOptions()
