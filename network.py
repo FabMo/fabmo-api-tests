@@ -41,22 +41,26 @@ class Network:
     def get_network_identity(self):
         r = requests.get(f'{config.API_URL}/network/identity', timeout = config.TIMEOUT)
         assert r.status_code == 200
+        return r.json()
 
     def set_network_identity(self, identity):
-        r = requests.post(f'{config.API_URL}/network/identity', data = identity, timeout = config.TIMEOUT)
+        r = requests.post(f'{config.API_URL}/network/identity', json = identity, timeout = config.TIMEOUT)
         assert r.status_code == 200
 
     def get_is_online(self):
         r = requests.get(f'{config.API_URL}/network/online', timeout = config.TIMEOUT)
         assert r.status_code == 200
+        return r.json()
 
     def get_wifi_networks(self):
         r = requests.get(f'{config.API_URL}/network/wifi/scan', timeout = config.TIMEOUT)
         assert r.status_code == 200
+        return r.json()
 
     def get_wifi_network_history(self):
-        r = requests.get(f'{config.API_URL}/network/wifi/scan', timeout = config.TIMEOUT)
+        r = requests.get(f'{config.API_URL}/network/wifi/history', timeout = config.TIMEOUT)
         assert r.status_code == 200
+        return r.json()
 
 if __name__ == "__main__":
     network = Network()
