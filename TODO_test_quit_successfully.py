@@ -36,9 +36,11 @@ def quit_successfully(results):
     job.quit()
 
     # Wait for running after sending quit. Job should not run at all.
+    # If the check evaluates to true, that means that the job was running after
+    # sending a quit. Hence the test should fail.
     print("waiting for running signaling a failed quit")
     check = util.test_check(mm.wait_for_state("running", 10), "now running", "timed out while waiting for running")
-    if check is False:
+    if check is True:
         return
 
     results["code"] = True
