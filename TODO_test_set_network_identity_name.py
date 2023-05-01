@@ -1,3 +1,4 @@
+# Requires a change in fabmo, branch kk_fixing_auth
 import time
 import threading
 from config import config
@@ -11,7 +12,7 @@ mm.clear_all_state()
 network = Network()
 util = Util()
 
-def set_network_identity(results):
+def set_network_identity_name(results):
     original_network_id = network.get_network_identity()
     print(f"First retrieve the original network id: {original_network_id}")
     check = util.test_check(original_network_id['data']['name'] is not None, "Retrieved network id", "Unable to retrieve network id")
@@ -20,8 +21,8 @@ def set_network_identity(results):
     print(f"Original network id: {original_network_id['data']['name']}")
 
     print("Now set the id to something new.")
-    set_identity = {'name' : "test_network_id"}
-    network.set_network_identity(set_identity)
+    set_identity_name = {'name' : "test_network_id"}
+    network.set_network_identity(set_identity_name)
 
     print("Check id again to make sure the change took.")
     new_network_id = network.get_network_identity()
@@ -39,11 +40,11 @@ def thread_for_mm(args):
 
 # test function
 
-def test_set_network_identity():
+def test_set_network_identity_name():
     # setting things up so test can run
     messageMonitorThread = threading.Thread(target=thread_for_mm, args=(1,), daemon=True)
     results = {"code":False}
-    testThread = threading.Thread(target=set_network_identity, args=(results,))
+    testThread = threading.Thread(target=set_network_identity_name, args=(results,))
 
     # test sequence
     messageMonitorThread.start()
@@ -56,5 +57,5 @@ def test_set_network_identity():
 
 if __name__ == "__main__":
     print(config.API_URL)
-    print("Testing set_network_identity")
-    test_set_network_identity()
+    print("Testing set_network_identity_name")
+    test_set_network_identity_name()

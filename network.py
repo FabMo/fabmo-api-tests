@@ -46,6 +46,7 @@ class Network:
     def set_network_identity(self, identity):
         r = requests.post(f'{config.API_URL}/network/identity', json = identity, timeout = config.TIMEOUT)
         assert r.status_code == 200
+        print(r.json())
 
     def get_is_online(self):
         r = requests.get(f'{config.API_URL}/network/online', timeout = config.TIMEOUT)
