@@ -3,7 +3,7 @@ from config import config
 
 class Network:
     def __init__(self):
-        self.initialized = 1    
+        self.initialized = 1
 
     def connect_to_wifi(self, ssid, password):
         data = { 'ssid': ssid, 'password': password }
@@ -49,7 +49,7 @@ class Network:
     def get_is_online(self):
         r = requests.get(f'{config.API_URL}/network/online', timeout = config.TIMEOUT)
         assert r.status_code == 200
-    
+
     def get_wifi_networks(self):
         r = requests.get(f'{config.API_URL}/network/wifi/scan', timeout = config.TIMEOUT)
         assert r.status_code == 200
