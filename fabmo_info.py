@@ -10,11 +10,14 @@ class Fabmo_Info:
         assert r.status_code == 200
         return r.json()
 
-    # TODO not implemented yet
-    # def set_config(self):
-    #     r = requests.post(f'{config.API_URL}/config', data = , timeout = config.TIMEOUT)
-    #     assert r.status_code == 200
-    #     return r.json()
+    # Config change should be "engine":{ {key, value} }, "driver": { {key, value} },
+    # "opensbp": { {key, value} }, or "machine": { {key, value} }
+    # Currently this method does not allow you to clear fields, for example:
+    # "opensbp": { tempVariables{} } does not seem to work
+    def set_config(self, config_change):
+        r = requests.post(f'{config.API_URL}/config', json = config_change, timeout = config.TIMEOUT)
+        print(r.text)
+        assert r.status_code == 200
 
     # Provides fabmo 'status', the same status that message monitor is monitoring
     def status(self):
