@@ -19,8 +19,9 @@ class User:
     #     r = requests.post(f'{config.API_URL}/authentication/user', data=new_user, timeout = config.TIMEOUT)
     #     print(r.text)
 
-    # TODO def modify_user(self):
-        #r = requests.post(f'{config.API_URL}/authentication/user', user_info=, timeout = config.TIMEOUT)
+    # def modify_user(self, username, user_info):
+    #    r = requests.post(f'{config.API_URL}/authentication/user/{username}', data=user_info, auth=('admin', 'test444'), timeout = config.TIMEOUT)
+    #    print(r.text)
 
     def delete_user(self, user_id):
         r = requests.post(f'{config.API_URL}/authentication/user/{user_id}', timeout = config.TIMEOUT)
