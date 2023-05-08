@@ -65,7 +65,9 @@ class App:
         assert r.status_code == 200
         return r.json()
 
-    # TODO def setAppConfig(self, app_id):
+    def set_app_config(self, app_id, app_data):
+        r = requests.post(f'{config.API_URL}/apps/{app_id}/config', json=app_data, timeout=config.TIMEOUT)
+        assert r.status_code == 200
 
 if __name__ == "__main__":
     app = App()
