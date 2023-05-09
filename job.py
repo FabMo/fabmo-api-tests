@@ -112,8 +112,9 @@ class Job:
             return id_value
         return False
 
-
-    # TODO def get_job_history(start, count)
+    def get_job_history(self, start, count):
+        r = requests.get(f'{config.API_URL}/jobs/history?start={start}&count={count}', timeout=config.TIMEOUT)
+        return r.json()
 
     # TODO def update_order()
 

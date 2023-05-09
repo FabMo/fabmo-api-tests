@@ -1,6 +1,4 @@
-# Test is not currently Passing!!
-# Fabmo-engine issue 970
-# https://github.com/FabMo/FabMo-Engine/issues/970
+# TODO, test still fails sometimes, but fabmo only executes a couple of moves.
 
 import time
 import threading
