@@ -21,54 +21,46 @@ class MessageMonitor:
 
     @staticmethod
     def setState(state):
-        lock.acquire()
-        MessageMonitor.eventsReceived["state"] = state
-        lock.release()
+        with lock:
+            MessageMonitor.eventsReceived["state"] = state
 
     @staticmethod
     def getState():
-        lock.acquire()
-        rc = MessageMonitor.eventsReceived["state"]
-        lock.release()
+        with lock:
+            rc = MessageMonitor.eventsReceived["state"]
         return rc
 
     @staticmethod
     def setChange(change):
-        lock.acquire()
-        MessageMonitor.eventsReceived["change"] = change
-        lock.release()
+        with lock:
+            MessageMonitor.eventsReceived["change"] = change
 
     @staticmethod
     def getChange():
-        lock.acquire()
-        rc = MessageMonitor.eventsReceived["change"]
-        lock.release()
+        with lock:
+            rc = MessageMonitor.eventsReceived["change"]
         return rc
 
     @staticmethod
     def setOut1(output):
-        lock.acquire()
-        MessageMonitor.eventsReceived["out1"] = output
-        lock.release()
+        with lock:
+            MessageMonitor.eventsReceived["out1"] = output
 
     @staticmethod
     def getOut1():
-        lock.acquire()
-        rc = MessageMonitor.eventsReceived["out1"]
-        lock.release()
+        with lock:
+            rc = MessageMonitor.eventsReceived["out1"]
         return rc
 
     @staticmethod
     def setMsg(msg):
-        lock.acquire()
-        MessageMonitor.eventsReceived["message"] = msg
-        lock.release()
+        with lock:
+            MessageMonitor.eventsReceived["message"] = msg
 
     @staticmethod
     def getMsg():
-        lock.acquire()
-        rc = MessageMonitor.eventsReceived["message"]
-        lock.release()
+        with lock:
+            rc = MessageMonitor.eventsReceived["message"]
         return rc
 
 
@@ -138,6 +130,7 @@ class MessageMonitor:
         MessageMonitor.setState("notYet")
         MessageMonitor.setChange("notChange")
         MessageMonitor.setOut1("notOutput")
+        MessageMonitor.setMsg("notMessage")
 
     # public method
     def run(self):
