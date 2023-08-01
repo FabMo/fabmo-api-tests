@@ -4,8 +4,10 @@ First create a virtual environment in this directory,
  > python -m venv ./venv
 
 Then activate the virtual environment,
+
 On linux:
  > . venv/bin/activate
+
 On windows:
  > .\venv\Scripts\activate 
 
