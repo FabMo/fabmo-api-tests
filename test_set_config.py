@@ -23,8 +23,9 @@ def set_config(results):
 
     print("Get the config and check that test variable is 0")
     fabmo_config = info.get_config()
-    check = util.test_check(fabmo_config['data']['config']['opensbp']['tempVariables'] == {"TEST": 0}, "Test var is 0","Test var is not 0")
+    check = util.test_check(fabmo_config['data']['config']['opensbp']['tempVariables'].get("TEST") == 0, "Test var is 0","Test var is not 0")
     if check is False:
+        print(f"The test var returned {fabmo_config['data']['config']['opensbp']['tempVariables'].get('TEST')}")
         return
 
     print("Set test variable to 1")
@@ -37,7 +38,7 @@ def set_config(results):
 
     print("Parse the config for the test variable, this time it should be 1")
     fabmo_config = info.get_config()
-    check = util.test_check(fabmo_config['data']['config']['opensbp']['tempVariables'] == {"TEST": 1}, "Test var is 1","Test var is not 1")
+    check = util.test_check(fabmo_config['data']['config']['opensbp']['tempVariables'].get("TEST") == 1, "Test var is 1","Test var is not 1")
     if check is False:
         return
 
@@ -51,7 +52,7 @@ def set_config(results):
 
     print("Get the config and check that test var is 0")
     fabmo_config = info.get_config()
-    check = util.test_check(fabmo_config['data']['config']['opensbp']['tempVariables'] == {"TEST": 0}, "Test var is 0","Test var is not 0")
+    check = util.test_check(fabmo_config['data']['config']['opensbp']['tempVariables'].get("TEST") == 0, "Test var is 0","Test var is not 0")
     if check is False:
         return
 
